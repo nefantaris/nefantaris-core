@@ -1,0 +1,127 @@
+.claude/rules/frontend.md
+  s_e99fde567452af::t_714882d3918fa4 1-232
+.gitignore
+  s_85c100cecceaed::t_a5a79cfecca2e7 1-20
+.prettierignore
+  s_a4962119c56942::t_b17fd894ffed92 1-5
+BRIEF.md
+  s_a4962119c56942::t_48d15069fcae7e 1-35
+LICENSE
+  s_85c100cecceaed::t_ecb102d52350e0 1-21
+README.md
+  s_85c100cecceaed::t_c47d6c10e29879 1-42
+examples/demo-site/.gitignore
+  s_a4962119c56942::t_31c3ae43cde237 1-2
+examples/demo-site/content/pages/about.md
+  s_a4962119c56942::t_6775d179732caa 1-19
+examples/demo-site/content/pages/index.md
+  s_a4962119c56942::t_2ea8518bec7df9 1-9
+examples/demo-site/content/posts/building-in-public.md
+  s_a4962119c56942::t_c6742ffb540ac9 1-8
+examples/demo-site/content/posts/hello-world.md
+  s_a4962119c56942::t_fd08a80cb3986b 1-11
+examples/demo-site/nefantaris.json
+  s_a4962119c56942::t_643a345a7be837 1-5
+package-lock.json
+  s_a4962119c56942::t_358c3ee5174df2 1-2021
+package.json
+  s_85c100cecceaed::t_048203939d8949 1-41
+site-template/.gitignore
+  s_e99fde567452af::t_e180ac821fc91b 1-22
+site-template/README.md
+  s_a4962119c56942::t_cc8a2f1419906e 1-26
+site-template/eslint-rules/prefer-webp-images.js
+  s_b6c8b61dc23230::t_2c68ab3822e397 1-60
+site-template/eslint.config.js
+  s_b6c8b61dc23230::t_885873f983d105 1-57
+site-template/package-lock.json
+  s_b6c8b61dc23230::t_8c90b8357806ab 1-6452
+site-template/package.json
+  s_b6c8b61dc23230::t_8497d466a228d3 1-50
+site-template/src/App.tsx
+  s_a4962119c56942::t_5a45e2b1e44002 1-72
+site-template/src/entry-server.tsx
+  s_a4962119c56942::t_47326a417b62be 1-23
+site-template/src/generated/content.ts
+  s_a4962119c56942::t_9f60493336a80c 1-7
+site-template/src/theme/theme.css
+  s_e9274aa47e37bb::t_988eb58c48c55f 1-4
+site-template/src/utils/classNames.ts
+  s_b6c8b61dc23230::t_8af866d70e46c2 1-24
+site-template/tsconfig.json
+  s_b6c8b61dc23230::t_0f2eac1988cb24 1-21
+site-template/vite.config.ts
+  s_b6c8b61dc23230::t_dc3f87416f1c96 1-7
+src/NefantarisError.ts
+  s_a4962119c56942::t_78c5570cb2f9d3 1
+src/cli/build.ts
+  s_a4962119c56942::t_8dba0ecc4fd708 1-26
+src/cli/dev.ts
+  s_a4962119c56942::t_6cfc5e8c5fc14e 1-54
+src/cli/index.ts
+  s_a4962119c56942::t_b2fabf34a04f34 1-31
+src/config.ts
+  s_a4962119c56942::t_b9dafdbd8f56de 1-44
+src/content/index.ts
+  s_a4962119c56942::t_fe497227166b6e 1-217
+src/content/markdown.ts
+  s_a4962119c56942::t_b73c6673b0020f 1-249
+src/instantiate/index.ts
+  s_a4962119c56942::t_1ffe310009a9c3 1-140
+src/narrow.ts
+  s_e9274aa47e37bb::t_5171aac6cffc95 1-2
+src/prerender/index.ts
+  s_a4962119c56942::t_649dd1e62aab24 1-133
+src/run.ts
+  s_a4962119c56942::t_015ce4932323c0 1-23
+src/themes/index.ts
+  s_a4962119c56942::t_08b6b717f2c3b7 1-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e31a99b565e5b6878e76de17c6b96208d4b50ed2",
+  "prompts": {},
+  "sessions": {
+    "s_85c100cecceaed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bee6880b-e831-4dca-a98b-2df118fd9056",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_a4962119c56942": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af7f31b-8456-479c-bc58-5da43f12f260",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_b6c8b61dc23230": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a8a96f40-b61e-4f39-8f8a-ac861a20c7f2",
+        "model": "claude-fable-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_e9274aa47e37bb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a7cd5239-1c16-4ee7-94a9-7cdcee17f4da",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_e99fde567452af": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d507be1-b4d2-4541-9fe9-2550b76c04bb",
+        "model": "claude-fable-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
