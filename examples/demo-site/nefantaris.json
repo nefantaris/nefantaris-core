@@ -1,0 +1,5 @@
+{
+    "name": "Nefantaris Demo",
+    "theme": { "source": "../test-theme", "version": "local" },
+    "plugins": []
+}

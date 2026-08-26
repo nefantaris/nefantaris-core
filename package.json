@@ -1,0 +1,41 @@
+{
+    "name": "@nefantaris/core",
+    "version": "0.0.0",
+    "description": "Turns markdown content repos into prerendered static React sites",
+    "license": "MIT",
+    "author": "Adam Sturge",
+    "homepage": "https://github.com/nefantaris/nefantaris-core#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nefantaris/nefantaris-core.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nefantaris/nefantaris-core/issues"
+    },
+    "type": "module",
+    "bin": {
+        "nef": "dist/cli/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "dev": "tsx src/cli/index.ts dev",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
+    },
+    "dependencies": {
+        "remark-directive": "4.0.0",
+        "remark-frontmatter": "5.0.0",
+        "remark-parse": "11.0.0",
+        "unified": "11.0.5",
+        "yaml": "2.9.0"
+    },
+    "devDependencies": {
+        "@types/mdast": "4.0.4",
+        "@types/node": "26.3.0",
+        "mdast-util-directive": "3.1.0",
+        "prettier": "3.9.6",
+        "tsx": "4.23.12",
+        "typescript": "7.0.2"
+    }
+}

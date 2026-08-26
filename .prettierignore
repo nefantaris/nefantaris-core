@@ -1,0 +1,5 @@
+site-template/
+dist/
+node_modules/
+.claude/
+.nefantaris/
