@@ -18,19 +18,27 @@
     },
     "scripts": {
         "build": "tsc",
-        "typecheck": "tsc --noEmit",
+        "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.e2e.json",
         "dev": "tsx src/cli/index.ts dev",
+        "build:fixture": "tsx src/cli/index.ts build fixtures/demo-site",
+        "serve:fixture": "tsx e2e/serveFixture.ts",
+        "test:e2e": "npm run build:fixture && playwright test",
+        "test:e2e:ui": "npm run build:fixture && playwright test --ui",
+        "lighthouse": "npm run build:fixture && lhci autorun",
         "format": "prettier --write .",
         "format:check": "prettier --check ."
     },
     "dependencies": {
         "remark-directive": "4.0.0",
         "remark-frontmatter": "5.0.0",
+        "remark-gfm": "4.0.1",
         "remark-parse": "11.0.0",
         "unified": "11.0.5",
         "yaml": "2.9.0"
     },
     "devDependencies": {
+        "@lhci/cli": "0.15.1",
+        "@playwright/test": "1.62.1",
         "@types/mdast": "4.0.4",
         "@types/node": "26.3.0",
         "mdast-util-directive": "3.1.0",

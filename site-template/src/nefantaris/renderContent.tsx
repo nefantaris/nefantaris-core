@@ -3,7 +3,9 @@ import { createElement, Fragment } from "react";
 import { Link } from "wouter";
 import type { ContentNode, DirectiveComponents } from "./types";
 
-const voidTags = new Set(["img", "hr", "br"]);
+const voidTags = new Set(["img", "hr", "br", "input"]);
+
+const tableScrollRegionLabel = "Table";
 
 const isRouteHref = (href: string): boolean =>
     href.startsWith("/") && !href.startsWith("/assets/");
@@ -38,6 +40,37 @@ const renderNode = (
                 </Link>
             );
         }
+        if (typeof href === "string") {
+            return (
+                <a
+                    key={key}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    {...anchorProps}
+                >
+                    {renderContent(node.children, directives)}
+                </a>
+            );
+        }
+    }
+    if (node.tag === "table") {
+        return (
+            <div
+                key={key}
+                data-table-scroll=""
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                tabIndex={0}
+                role="region"
+                aria-label={tableScrollRegionLabel}
+            >
+                {createElement(
+                    node.tag,
+                    node.props,
+                    renderContent(node.children, directives)
+                )}
+            </div>
+        );
     }
     if (voidTags.has(node.tag)) {
         return createElement(node.tag, { key, ...node.props });

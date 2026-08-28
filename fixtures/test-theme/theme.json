@@ -1,0 +1,15 @@
+{
+    "name": "nefantaris-test-theme",
+    "contract": 1,
+    "layout": "Layout.tsx",
+    "templates": {
+        "page": "templates/PageTemplate.tsx",
+        "notFound": "templates/NotFoundTemplate.tsx",
+        "home": "templates/HomeTemplate.tsx",
+        "post": "templates/PostTemplate.tsx",
+        "blogIndex": "templates/BlogIndexTemplate.tsx"
+    },
+    "directives": {
+        "gallery": "directives/Gallery.tsx"
+    }
+}

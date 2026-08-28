@@ -1,0 +1,35 @@
+name: Lighthouse CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    lighthouse:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "24.19.0"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Lighthouse CI
+              run: npm run lighthouse
+
+            - name: Upload Lighthouse reports
+              uses: actions/upload-artifact@v7
+              if: always()
+              with:
+                  name: lighthouse-reports
+                  path: .lighthouseci
+                  retention-days: 30

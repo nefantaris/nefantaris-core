@@ -3,3 +3,8 @@ dist/
 node_modules/
 .claude/
 .nefantaris/
+fixtures/*/tsconfig.json
+playwright-report/
+blob-report/
+test-results/
+.lighthouseci/

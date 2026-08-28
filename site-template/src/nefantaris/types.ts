@@ -2,6 +2,12 @@ import type { ComponentType, PropsWithChildren } from "react";
 
 export type SiteMeta = { name: string };
 
+export type NavItem = {
+    label: string;
+    href: string;
+    children?: NavItem[];
+};
+
 export type PageMeta = {
     title: string;
     description?: string;
@@ -9,6 +15,7 @@ export type PageMeta = {
     slug?: string;
     draft?: boolean;
     template?: string;
+    order?: number;
 };
 
 export type PostSummary = {
@@ -18,14 +25,49 @@ export type PostSummary = {
     date: string;
 };
 
-export type LayoutProps = PropsWithChildren<{ site: SiteMeta }>;
+export type ElementProps = Record<string, string | boolean>;
+
+export type ContentNode =
+    | { kind: "text"; value: string }
+    | {
+          kind: "element";
+          tag: string;
+          props: ElementProps;
+          children: ContentNode[];
+      }
+    | { kind: "directive"; name: string; children: ContentNode[] };
+
+export type RouteEntry = {
+    path: string;
+    template: string;
+    meta: PageMeta;
+    body: ContentNode[];
+};
+
+export type RouteSummary = {
+    path: string;
+    title: string;
+    description?: string;
+    template: string;
+    order?: number;
+};
+
+export type LayoutProps = PropsWithChildren<{
+    site: SiteMeta;
+    nav: NavItem[];
+    routes: RouteSummary[];
+    currentPath: string;
+    template: string | undefined;
+}>;
 
 export type TemplateProps = PropsWithChildren<{
     site: SiteMeta;
     meta: PageMeta;
+    posts: PostSummary[];
+    routes: RouteSummary[];
 }>;
 
-export type PostListTemplateProps = TemplateProps & { posts: PostSummary[] };
+export type NotFoundProps = { site: SiteMeta };
 
 export type DirectiveComponents = Record<
     string,
@@ -34,31 +76,7 @@ export type DirectiveComponents = Record<
 
 export type Theme = {
     Layout: ComponentType<LayoutProps>;
-    templates: {
-        home: ComponentType<PostListTemplateProps>;
-        page: ComponentType<TemplateProps>;
-        post: ComponentType<TemplateProps>;
-        blogIndex: ComponentType<PostListTemplateProps>;
-        notFound: ComponentType<{ site: SiteMeta }>;
-    };
+    templates: Record<string, ComponentType<TemplateProps>>;
+    notFound: ComponentType<NotFoundProps>;
     directives: DirectiveComponents;
-};
-
-export type ContentNode =
-    | { kind: "text"; value: string }
-    | {
-          kind: "element";
-          tag: string;
-          props: Record<string, string>;
-          children: ContentNode[];
-      }
-    | { kind: "directive"; name: string; children: ContentNode[] };
-
-export type TemplateName = "home" | "page" | "post" | "blogIndex";
-
-export type RouteEntry = {
-    path: string;
-    template: TemplateName;
-    meta: PageMeta;
-    body: ContentNode[];
 };

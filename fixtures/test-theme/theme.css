@@ -1,0 +1,9 @@
+@theme {
+    --color-ink: #171717;
+    --color-paper: #fafafa;
+    --color-link: #1d4ed8;
+}
+
+[data-table-scroll] {
+    overflow-x: auto;
+}

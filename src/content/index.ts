@@ -2,13 +2,12 @@ import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, join, relative, sep } from "node:path";
 import { NefantarisError } from "../NefantarisError.js";
+import {
+    selectableTemplateNames,
+    type ThemeManifest,
+} from "../themes/manifest.js";
 import { parseMarkdown } from "./markdown.js";
-import type {
-    PageMeta,
-    PostSummary,
-    RouteEntry,
-    TemplateName,
-} from "./types.js";
+import type { PageMeta, PostSummary, RouteEntry } from "./types.js";
 
 export type SiteContent = {
     routes: RouteEntry[];
@@ -43,6 +42,23 @@ const readOptionalString = (
     return value;
 };
 
+const readOptionalNumber = (
+    frontmatter: Record<string, unknown>,
+    key: "order",
+    filePath: string
+): number | undefined => {
+    const value = frontmatter[key];
+    if (value === undefined) {
+        return undefined;
+    }
+    if (typeof value !== "number") {
+        throw new NefantarisError(
+            `${filePath}: frontmatter "${key}" must be a number`
+        );
+    }
+    return value;
+};
+
 const readMeta = (
     frontmatter: Record<string, unknown>,
     filePath: string
@@ -67,13 +83,20 @@ const readMeta = (
     const date = readOptionalString(frontmatter, "date", filePath);
     const slug = readOptionalString(frontmatter, "slug", filePath);
     const template = readOptionalString(frontmatter, "template", filePath);
+    const order = readOptionalNumber(frontmatter, "order", filePath);
     if (description !== undefined) meta.description = description;
     if (date !== undefined) meta.date = date;
     if (slug !== undefined) meta.slug = slug;
     if (template !== undefined) meta.template = template;
     if (draft !== undefined) meta.draft = draft;
+    if (order !== undefined) meta.order = order;
     return meta;
 };
+
+const defaultTemplateName = "page";
+const homeTemplateName = "home";
+const postTemplateName = "post";
+const blogIndexTemplateName = "blogIndex";
 
 const trimSlashes = (value: string): string => value.replace(/^\/+|\/+$/g, "");
 
@@ -88,22 +111,37 @@ const routeFromPagePath = (pagesDir: string, filePath: string): string => {
 const resolvePageTemplate = (
     meta: PageMeta,
     route: string,
-    filePath: string
-): TemplateName => {
+    filePath: string,
+    manifest: ThemeManifest
+): string => {
+    const available = selectableTemplateNames(manifest);
     if (meta.template === undefined) {
-        return route === "/" ? "home" : "page";
+        return route === "/" && available.includes(homeTemplateName)
+            ? homeTemplateName
+            : defaultTemplateName;
     }
-    if (
-        meta.template === "home" ||
-        meta.template === "page" ||
-        meta.template === "post" ||
-        meta.template === "blogIndex"
-    ) {
+    if (available.includes(meta.template)) {
         return meta.template;
     }
     throw new NefantarisError(
-        `${filePath}: unknown template "${meta.template}" (expected home, page, post, or blogIndex)`
+        `${filePath}: unknown template "${meta.template}" — theme "${manifest.name}" declares ${available.join(", ")}`
     );
+};
+
+const compareAuthoredOrder = (
+    first: number | undefined,
+    second: number | undefined
+): number => {
+    if (first === second) {
+        return 0;
+    }
+    if (first === undefined) {
+        return 1;
+    }
+    if (second === undefined) {
+        return -1;
+    }
+    return first - second;
 };
 
 const assertUniqueRoutes = (routes: RouteEntry[]): void => {
@@ -118,7 +156,10 @@ const assertUniqueRoutes = (routes: RouteEntry[]): void => {
     }
 };
 
-const parsePages = async (pagesDir: string): Promise<RouteEntry[]> => {
+const parsePages = async (
+    pagesDir: string,
+    manifest: ThemeManifest
+): Promise<RouteEntry[]> => {
     const routes: RouteEntry[] = [];
     for (const filePath of await collectMarkdownFiles(pagesDir)) {
         const source = await readFile(filePath, "utf8");
@@ -133,7 +174,7 @@ const parsePages = async (pagesDir: string): Promise<RouteEntry[]> => {
                 : `/${trimSlashes(meta.slug)}`;
         routes.push({
             path,
-            template: resolvePageTemplate(meta, path, filePath),
+            template: resolvePageTemplate(meta, path, filePath, manifest),
             meta,
             body,
         });
@@ -171,7 +212,7 @@ const parsePosts = async (postsDir: string): Promise<SiteContent> => {
                 ? basename(filePath, ".md")
                 : trimSlashes(meta.slug);
         const path = `/blog/${slug}`;
-        routes.push({ path, template: "post", meta, body });
+        routes.push({ path, template: postTemplateName, meta, body });
         const summary: PostSummary = {
             route: path,
             title: meta.title,
@@ -191,14 +232,15 @@ const parsePosts = async (postsDir: string): Promise<SiteContent> => {
 };
 
 export const parseSiteContent = async (
-    siteDir: string
+    siteDir: string,
+    manifest: ThemeManifest
 ): Promise<SiteContent> => {
     const pagesDir = join(siteDir, "content", "pages");
     const postsDir = join(siteDir, "content", "posts");
     if (!existsSync(pagesDir)) {
         throw new NefantarisError(`${siteDir} has no content/pages directory`);
     }
-    const routes = await parsePages(pagesDir);
+    const routes = await parsePages(pagesDir, manifest);
     const posts: PostSummary[] = [];
     if (existsSync(postsDir)) {
         const parsed = await parsePosts(postsDir);
@@ -206,12 +248,16 @@ export const parseSiteContent = async (
         posts.push(...parsed.posts);
         routes.push({
             path: "/blog",
-            template: "blogIndex",
+            template: blogIndexTemplateName,
             meta: { title: "Blog" },
             body: [],
         });
     }
-    routes.sort((a, b) => a.path.localeCompare(b.path));
+    routes.sort(
+        (first, second) =>
+            compareAuthoredOrder(first.meta.order, second.meta.order) ||
+            first.path.localeCompare(second.path)
+    );
     assertUniqueRoutes(routes);
     return { routes, posts };
 };

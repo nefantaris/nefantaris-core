@@ -4,38 +4,65 @@ The Nefantaris build engine. Takes a content-only repo (markdown + frontmatter,
 assets, config, optional child theme) and produces a prerendered static React
 site.
 
-See [BRIEF.md](./BRIEF.md) for the mission and v1 scope.
+See [BRIEF.md](./BRIEF.md) for the mission and v1 scope. The `theme.json` and
+`plugin.json` manifests core reads are specified in `THEME-CONTRACT.md`.
 
 ## Commands
 
-| Command             | Purpose                                             |
-| ------------------- | --------------------------------------------------- |
-| `npm run build`     | Compile the CLI to `dist/`                          |
-| `npm run typecheck` | Type-check without emitting                         |
-| `npm run dev`       | Run the `nef dev` server from source                |
-| `npm run format`    | Format with Prettier (`format:check` to only check) |
+| Command                 | Purpose                                                      |
+| ----------------------- | ------------------------------------------------------------ |
+| `npm run build`         | Compile the CLI to `dist/`                                   |
+| `npm run typecheck`     | Type-check the CLI and the Playwright suite without emitting |
+| `npm run dev`           | Run the `nef dev` server from source                         |
+| `npm run build:fixture` | Build `fixtures/demo-site` to static HTML                    |
+| `npm run serve:fixture` | Serve that build on `http://localhost:4173`                  |
+| `npm run test:e2e`      | Rebuild the fixture, then run Playwright                     |
+| `npm run test:e2e:ui`   | The same suite in the Playwright UI                          |
+| `npm run lighthouse`    | Rebuild the fixture, then assert `lighthouserc.json`         |
+| `npm run format`        | Format with Prettier (`format:check` to only check)          |
 
 ## CLI
 
 Once built, the engine is driven by `nef`:
 
-| Command     | What it does                                             |
-| ----------- | -------------------------------------------------------- |
-| `nef build` | Build a site directory to static HTML                    |
-| `nef dev`   | Serve the site with hot reload                           |
-| `nef eject` | Emit the instantiated site as a standalone React project |
+| Command                                 | What it does                                                |
+| --------------------------------------- | ----------------------------------------------------------- |
+| `nef init [siteDir] [--theme <source>]` | Scaffold a new site with starter content                    |
+| `nef build [siteDir]`                   | Build a site directory to static HTML                       |
+| `nef dev [siteDir]`                     | Serve the site with hot reload                              |
+| `nef inspect [siteDir] --json`          | Print the site's config, templates, and directives as JSON  |
+| `nef theme dev [themeDir]`              | Preview a theme against the fixture corpus                  |
+| `nef theme check [themeDir]`            | Validate, typecheck, lint, and format-check a theme         |
+| `nef plugins add <name> [siteDir]`      | Enable a plugin in the site's `nefantaris.json`             |
+| `nef eject [siteDir]`                   | Emit the site as a standalone React project — not built yet |
 
 ## Layout
 
-| Path              | What lives there                                                    |
-| ----------------- | ------------------------------------------------------------------- |
-| `src/cli`         | `build`, `dev`, `eject` entry points                                |
-| `src/content`     | Markdown + frontmatter parsing, directive handling                  |
-| `src/themes`      | Parent-theme fetching and child-theme overlay                       |
-| `src/prerender`   | Route-by-route static HTML rendering                                |
-| `src/instantiate` | Injecting routes, content, and theme into the site template         |
-| `site-template/`  | The internal Vite/React/Wouter/Tailwind app that builds instantiate |
-| `examples/`       | Test fixtures (`demo-site`, `test-theme`)                           |
+| Path                  | What lives there                                                                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/cli`             | Entry points for `build`, `dev`, `theme dev`, `theme check`, `plugins add`                                                                                    |
+| `src/config.ts`       | `nefantaris.json` — name, theme source, `nav`, enabled plugins                                                                                                |
+| `src/manifest.ts`     | Shared reading and field validation for `theme.json` and `plugin.json`                                                                                        |
+| `src/content`         | Markdown + frontmatter parsing, directives, template names from the manifest                                                                                  |
+| `src/themes`          | Manifest loading, the theme copy and child-theme overlay, the generated wiring module, contract types, and the fixture corpus a theme previews against        |
+| `src/plugins`         | Resolving the enabled set, enforcing a theme's `requires`, installing plugin dependencies into `.plugin-store/`, and emitting Vite aliases and tsconfig paths |
+| `src/instantiate`     | Injecting routes, content, nav, theme, and plugins into the site template                                                                                     |
+| `src/prerender`       | The Vite client and SSR builds, then route-by-route static HTML rendering                                                                                     |
+| `site-template/`      | The Vite/React/Wouter/Tailwind project every site is generated from                                                                                           |
+| `fixtures/demo-site`  | The fixture corpus — a content-only site covering every markdown construct, template, and directive                                                           |
+| `fixtures/test-theme` | A minimal theme in the manifest shape, the one `demo-site` builds against                                                                                     |
+| `e2e/`                | Playwright specs and the static server they share with Lighthouse                                                                                             |
+
+## Testing
+
+Both suites build `fixtures/demo-site` first and run against that output, so
+they cover the real prerendered HTML rather than an approximation of it.
+
+- `npm run test:e2e` runs two Playwright projects: `prerendered` visits the
+  build with JavaScript disabled, `hydrated` checks hydration and client-side
+  navigation.
+- `npm run lighthouse` runs Lighthouse CI over five routes and asserts the
+  thresholds in [lighthouserc.json](./lighthouserc.json).
 
 ## License
 

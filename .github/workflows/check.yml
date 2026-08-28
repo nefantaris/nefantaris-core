@@ -1,0 +1,36 @@
+name: Code Checks
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    workflow_dispatch:
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "24.19.0"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run TypeScript check
+              run: npm run typecheck
+
+            - name: Check formatting
+              run: npm run format:check
+
+            - name: Build the CLI
+              run: npm run build
+
+            - name: Build the fixture site
+              run: npm run build:fixture

@@ -7,6 +7,7 @@ export type PageMeta = {
     slug?: string;
     draft?: boolean;
     template?: string;
+    order?: number;
 };
 
 export type PostSummary = {
@@ -16,21 +17,21 @@ export type PostSummary = {
     date: string;
 };
 
+export type ElementProps = Record<string, string | boolean>;
+
 export type ContentNode =
     | { kind: "text"; value: string }
     | {
           kind: "element";
           tag: string;
-          props: Record<string, string>;
+          props: ElementProps;
           children: ContentNode[];
       }
     | { kind: "directive"; name: string; children: ContentNode[] };
 
-export type TemplateName = "home" | "page" | "post" | "blogIndex";
-
 export type RouteEntry = {
     path: string;
-    template: TemplateName;
+    template: string;
     meta: PageMeta;
     body: ContentNode[];
 };

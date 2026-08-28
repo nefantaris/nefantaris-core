@@ -15,7 +15,10 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "noUncheckedSideEffectImports": true
+        "noUncheckedSideEffectImports": true,
+        "paths": {
+            "nefantaris": ["./src/nefantaris/types.ts"]
+        }
     },
     "include": ["src"]
 }

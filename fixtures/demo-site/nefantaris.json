@@ -1,0 +1,30 @@
+{
+    "name": "Nefantaris Demo",
+    "theme": {
+        "source": "../test-theme",
+        "version": "local"
+    },
+    "nav": [
+        {
+            "label": "Home",
+            "href": "/"
+        },
+        {
+            "label": "About",
+            "href": "/about"
+        },
+        {
+            "label": "Markdown",
+            "href": "/markdown"
+        },
+        {
+            "label": "Gallery",
+            "href": "/gallery"
+        },
+        {
+            "label": "Blog",
+            "href": "/blog"
+        }
+    ],
+    "plugins": []
+}

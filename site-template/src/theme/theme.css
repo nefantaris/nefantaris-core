@@ -1,4 +1,3 @@
 @theme {
-    --font-sans:
-        "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
