@@ -1,0 +1,270 @@
+src/cli/build.ts
+  s_a8137800e380bc::t_08ce0e02160289 1,3,6
+src/themes/types.ts
+  s_a8137800e380bc::t_482dd9674caa34 1-9,40,45-50,55
+  s_a8137800e380bc::t_5477f4701a8bef 10-39,41-44,51-54
+site-template/src/theme/theme.css
+  s_a8137800e380bc::t_d8c24aefc253d2 2
+src/paths.ts
+  s_a8137800e380bc::t_d4956dc248e960 4-12,14-16
+  s_63d163699a8600::t_8329cc4f661675 17
+  s_63d163699a8600::t_2aaa3ffa2566a3 1
+src/cli/inspect.ts
+  s_ad479731e58ec2::t_d0262f7d31255a 1,8
+  s_ad479731e58ec2::t_2e3ce49f48533e 2-7,9-35
+.prettierignore
+  s_63d163699a8600::t_8329cc4f661675 6
+  s_63d163699a8600::t_1c08cd4ceec6db 7-10
+.github/workflows/e2e.yml
+  s_a8137800e380bc::t_6e7ad94e3c81d9 1-38
+src/themes/manifest.ts
+  s_a8137800e380bc::t_0942f506aa1dce 2-10,73-79,89,96-101
+  s_a8137800e380bc::t_7ec516ba2992f8 1,11-72,80-88,90-95,102-109
+src/plugins/enable.ts
+  s_a8137800e380bc::t_ea95f9369f5207 1,5,10,13,17,28-29
+  s_a8137800e380bc::t_f2dc0174f437e7 2-4,6-9,11-12,14-16,18-27,30-32
+e2e/fixtureSite.ts
+  s_63d163699a8600::t_8329cc4f661675 4-8
+  s_63d163699a8600::t_fd2e80b3119da4 1,3,9-13,15-19,21-23,26-163
+site-template/src/nefantaris/routeSummaries.ts
+  s_a8137800e380bc::t_535707ff3c0430 1-25
+src/plugins/store.ts
+  s_a8137800e380bc::t_98624e01ac7159 1-50
+src/manifest.ts
+  s_a8137800e380bc::t_e03a6e4f387106 1-78,80-152
+  s_a8137800e380bc::t_28dcda11174469 79
+src/cli/themeCheck.ts
+  s_a8137800e380bc::t_f85059df953776 1-58,60-78
+  s_a8137800e380bc::t_2e3e569584ab27 59
+src/themes/index.ts
+  s_a8137800e380bc::t_ebfb8411d7a1d9 2-4,79,110-113
+  s_a8137800e380bc::t_329e33bf99b4c2 5-9,14-78,80-109,114,120,124,129-132
+src/cli/prepareSite.ts
+  s_a8137800e380bc::t_1486c015ec935c 1-44
+src/content/types.ts
+  s_a8137800e380bc::t_9b69d627041b7a 20-21,27,34
+  s_a8137800e380bc::t_4ed88e71f83cb5 10
+package.json
+  s_a8137800e380bc::t_b7ba092899c00d 34
+  s_63d163699a8600::t_8329cc4f661675 23
+  s_63d163699a8600::t_8269ed95ff17f9 21,24-27,40-41
+README.md
+  s_a8137800e380bc::t_9b15d89df29448 55-57,59-65
+  s_63d163699a8600::t_a452bd04c58c1d 41-54
+  s_a8137800e380bc::t_8eb560215aa699 12-16,18,21-22,28-29,31-32,34-37
+  s_a8137800e380bc::t_0991a0021fc05d 7-8,19-20
+  s_3b2abc05d4aebd::t_d26bdf6c429164 30,33
+  s_63d163699a8600::t_8329cc4f661675 17,58
+src/plugins/manifest.ts
+  s_a8137800e380bc::t_9daa8d99811c16 1-130,133-145
+  s_a8137800e380bc::t_2737ea0864b65a 131-132
+src/cli/themeDev.ts
+  s_a8137800e380bc::t_ebfb8411d7a1d9 6,16
+  s_a8137800e380bc::t_e5dcba218751b3 4-5,7-9,25-29,31-33,35-36,38-46,50-51
+  s_a8137800e380bc::t_256f22222e5bbe 1-3,10-15,17-24,30,34,37,47-49
+site-template/src/nefantaris/types.ts
+  s_a8137800e380bc::t_40b6bc8ad85f38 5-10,30-34,36-44,55-57,59-61,66,70,79-80
+  s_a8137800e380bc::t_9b69d627041b7a 28-29,35,45-51,53,58,67
+  s_a8137800e380bc::t_e198b84a7efc3c 18,52,54
+src/themes/imports.ts
+  s_a8137800e380bc::t_5b0a728ea88ae8 1-90
+site-template/src/nefantaris/renderContent.tsx
+  s_ad479731e58ec2::t_9a47783c046432 43-55
+  s_a8137800e380bc::t_d94fcc0210c203 6
+  s_a8137800e380bc::t_4a46764ce96e24 7-8
+  s_ad479731e58ec2::t_625517203a4ef8 56-58
+src/content/markdown.ts
+  s_a8137800e380bc::t_a49755a0b2a850 1-11,15,21,28-39,41-46,49-51,53,57,77-81,85-88,96,101,110,116-117,124-128,134,136-147,163-283,287,289,294-301,308-357,359,369,390-391,417,420-421,454-457,490-496
+  s_a8137800e380bc::t_665529baace05e 52,302-307
+e2e/prerender.spec.ts
+  s_a8137800e380bc::t_03a11adf33a74a 261
+  s_a8137800e380bc::t_5c7766a0ca27c9 23,44,51,53,55,59-60,78-79,86,92-93,96,98,116,127,129-133,135-260,262-327,332-334
+  s_a8137800e380bc::t_5426f630c6a965 1-22,24-43,45-50,52,54,56-58,61-77,80-85,87-91,94-95,97,99-115,117-126,128,134,328-331
+src/themes/workspace.ts
+  s_a8137800e380bc::t_051b601d6a06c6 1-12,14-24,26-50,52-53,58-63,68-73,75
+  s_a8137800e380bc::t_d689dd9ca4b760 64-67
+  s_a8137800e380bc::t_54af85b92ad13a 13,25,51,54-57,74
+site-template/src/App.tsx
+  s_a8137800e380bc::t_681ab8703d8512 23,40-44
+  s_a8137800e380bc::t_903f48d0c003b4 3-9,32-33,51-53,55-57,65
+  s_a8137800e380bc::t_f4c2ac9185bc30 11-14,26-31,54
+src/themes/fixtures.ts
+  s_a8137800e380bc::t_fa8ae000dfeb5d 1,13,15-20,22-24,76,94,101-113,115-116,118-165,168-169,172,181,183-192,195,199-219,221-230,232-233,236,272,274-282
+  s_a8137800e380bc::t_d689dd9ca4b760 239-250,253-262,265-266,268-271
+  s_a8137800e380bc::t_9cc962ef5beba6 2-12,14,21,25,31,71,77-80,82-83,88,97,114,117,166-167,170-171,173-178,182,193-194,196-198,231,234-235,237-238,263-264,267,273,283-285
+  s_a8137800e380bc::t_8ac18df70ff7f4 251-252
+  s_a8137800e380bc::t_626311146674da 26-30,32-70,72-75,81,84-87,89-93,95-96,98-100,179-180,220
+src/plugins/index.ts
+  s_a8137800e380bc::t_606f086bae3dbc 1-31,33-120
+  s_a8137800e380bc::t_94442b4e45b394 32,121-130
+src/cli/dev.ts
+  s_a8137800e380bc::t_0110a8607c6391 2,4,8,14-15
+  s_084a3ba26438ac::t_fcc2ef871b1fc5 19
+src/config.ts
+  s_a8137800e380bc::t_d87838802ae1bb 7-12,14,17-61,81,96-102
+  s_a8137800e380bc::t_0ef4c206954f78 3
+src/cli/index.ts
+  s_a8137800e380bc::t_5c3129209fbce9 2,4,9-10,12-16,19-22,24-25,27,50-64,67-68,70-72,76-79,88-93,95
+  s_ad479731e58ec2::t_98d0e498b0d419 7
+  s_ad479731e58ec2::t_e4b1215a353070 80
+  s_3b2abc05d4aebd::t_deb17e04fedd81 81
+  s_3b2abc05d4aebd::t_cd29677f81792f 17
+  s_ad479731e58ec2::t_43471550e92c0b 8,18
+  s_ad479731e58ec2::t_408317a38d91d7 82-87
+  s_3b2abc05d4aebd::t_0beb46a0e79c83 29-49
+  s_a8137800e380bc::t_6345cd56704b78 65-66
+  s_a8137800e380bc::t_da48630bb17f80 69
+.github/workflows/check.yml
+  s_a8137800e380bc::t_6e7ad94e3c81d9 1-36
+src/themes/files.ts
+  s_a8137800e380bc::t_bb4e9640e8f5b8 4,7-15,18-20,30
+  s_a8137800e380bc::t_85c8b5b08f3cd3 2,21-23,25,28-29,31-43,45-47
+  s_a8137800e380bc::t_5f5d38f4ca0003 1,3,5-6,16-17,24,26-27,44,48-55
+.github/workflows/lighthouse.yml
+  s_a8137800e380bc::t_6e7ad94e3c81d9 1-35
+.gitignore
+  s_63d163699a8600::t_5b8c01204f9cc3 1,3-5
+  s_63d163699a8600::t_bdd03c315a3ace 6-11
+site-template/public/favicon.svg
+  s_cc7ba07e7a922c::t_1791942674bf17 1-49,51
+src/cli/init.ts
+  s_3b2abc05d4aebd::t_7fa7ce8132b2b5 47-57
+  s_3b2abc05d4aebd::t_89e972cb24bbd6 69-72
+  s_ad479731e58ec2::t_215b81d35db77c 2-3,5,11-13,15-18,20-25,27-46,58-61,73-79,81-82,87-90,95-96,101-106
+  s_3b2abc05d4aebd::t_cf7f4a9e7ca249 6-10,14
+  s_ad479731e58ec2::t_fd73ce149a347d 4,19,84-85
+  s_3b2abc05d4aebd::t_3ad3d60d5328d7 62-68
+  s_ad479731e58ec2::t_3082caac51e83c 1,26,80
+  s_3b2abc05d4aebd::t_a016703107d818 83,91-94,97-100
+  s_3b2abc05d4aebd::t_3e559c0d4145d2 86
+e2e/collectPageProblems.ts
+  s_a8137800e380bc::t_c59a9502fbd418 1-32
+e2e/hydration.spec.ts
+  s_a8137800e380bc::t_cfce1d2e1dc9bd 1-72
+e2e/navigation.spec.ts
+  s_a8137800e380bc::t_c68e77f67539f2 1-94
+e2e/serveFixture.ts
+  s_a8137800e380bc::t_dbb6d171cee73b 1-54
+e2e/tableScrollRegion.spec.ts
+  s_a8137800e380bc::t_421b7961578967 1-53
+e2e/waitForHydration.ts
+  s_a8137800e380bc::t_2ea205ec055066 1-13
+fixtures/demo-site/content/pages/about.md
+  s_a8137800e380bc::t_8b6fed3420b062 4
+fixtures/demo-site/content/pages/gallery.md
+  s_a8137800e380bc::t_a6c5f45650f40c 6,11
+fixtures/demo-site/content/pages/guides/deployment.md
+  s_a8137800e380bc::t_ac86b0191f9c4c 1-11
+fixtures/demo-site/content/pages/guides/installation.md
+  s_a8137800e380bc::t_55a45b922417ef 1-10
+fixtures/demo-site/content/pages/guides/introduction.md
+  s_a8137800e380bc::t_91169f408c00e6 1-12
+fixtures/demo-site/content/pages/hidden-draft.md
+  s_a8137800e380bc::t_3aff4c710a26c4 1-7
+fixtures/demo-site/content/pages/index.md
+  s_a8137800e380bc::t_33dc4c8938db48 4,10-11
+fixtures/demo-site/content/pages/markdown.md
+  s_a8137800e380bc::t_407bad931631ef 1-122
+fixtures/demo-site/content/pages/slugged.md
+  s_a8137800e380bc::t_117dacc829a867 1-8
+fixtures/demo-site/nefantaris.json
+  s_a8137800e380bc::t_8e5302b4178590 3-28
+fixtures/test-theme/Layout.tsx
+  s_a8137800e380bc::t_f72029f5f7b9a2 1,4-30,35,37-43,47-65
+fixtures/test-theme/components/PostList.tsx
+  s_a8137800e380bc::t_22fcafb2223497 1
+fixtures/test-theme/directives/Gallery.tsx
+  s_a8137800e380bc::t_0e30571f590ab8 4-7
+fixtures/test-theme/templates/BlogIndexTemplate.tsx
+  s_a8137800e380bc::t_b996e89b78e83a 1-2,4,12
+fixtures/test-theme/templates/HomeTemplate.tsx
+  s_a8137800e380bc::t_dcd7c668bbf67b 1-2,4,13
+fixtures/test-theme/templates/NotFoundTemplate.tsx
+  s_a8137800e380bc::t_7e7764c0127ded 1,4,15
+fixtures/test-theme/templates/PageTemplate.tsx
+  s_a8137800e380bc::t_7184948cf24df9 1,3,10
+fixtures/test-theme/templates/PostTemplate.tsx
+  s_a8137800e380bc::t_38085c065b85a2 1,3,13
+fixtures/test-theme/theme.css
+  s_a8137800e380bc::t_75cabb8a24473b 6-9
+fixtures/test-theme/theme.json
+  s_a8137800e380bc::t_db0b1c53c1456b 1-15
+lighthouserc.json
+  s_a8137800e380bc::t_98ce03420c8978 1-33
+package-lock.json
+  s_a8137800e380bc::t_f9119251291cb1 10,14,20,23-24,475-881,922-932,1273-1277,1279-1284,1287-1291,1293-1294,1297-1301,1303-1304,1307-1311,1313-1314,1317-1321,1323-1324,1327-1331,1333-1335,1337-1341,1344,1347-1397,1400,1405-1408,1415-1511,1514,1517-1521,1524-1535,1537-1539,1542-1573,1577-1598,1600-1601,1604-1608,1610-1613,1615,1618,1621-1629,1631,1633-1634,1641-1651,1653,1656-1659,1663,1666-1669,1676-1679,1686-1689,1696,1698-1699,1706-1725,1728-1732,1734-1735,1738-1743,1745-1746,1748-1749,1752-1756,1759,1761-1762,1765-1808,1811-1813,1815-1816,1819-1823,1826,1828-1829,1832-1836,1839,1842-1853,1856,1858-1859,1862-1866,1869-1878,1881-1885,1888,1891-1910,1912-1917,1919-1920,1923-1927,1930,1932-1933,1936-1940,1942-1943,1946-4339,4341-4439,4445-5008,5010-5157,5160-5164,5167-5198,5200-5209,5211-5214,5217-5228,5231-5232,5235-5240,5243-5266,5269-5284,5287-5291,5294,5297-5308,5311-5317,5320-5338,5341-5351,5354-5358,5361-5368,5371-5505,5508-5510,5513-5517,5520-5524,5527-5541,5544-5547,5550-5562,5564-5575,5577-5581,5584-5587,5590-5594,5597-5602,5605-5609,5612-5615,5618-5622,5625,5628-5636,5638-5642,5645-5649,5652-5656,5659-5662,5665-5666,5668-5673,5676,5678-5679,5682-5688,5690,5692-5693,5696-5700,5702-5703,5706-5717,5719-5720,5733-5739,5759-5789,5851-5863,5919-5959,5988-6184,6200-6316
+playwright.config.ts
+  s_a8137800e380bc::t_428a687eefac8b 1-2,4-15,17-32,34
+site-template/src/generated/content.ts
+  s_a8137800e380bc::t_3fbbdbe5134054 1-6,10-11
+site-template/src/generated/plugins.ts
+  s_a8137800e380bc::t_ea899a5c15f035 1-3
+site-template/src/theme/index.ts
+  s_a8137800e380bc::t_f081a0bc93d261 2,19
+site-template/tsconfig.json
+  s_a8137800e380bc::t_6ec08b88529990 18-21
+site-template/vite.config.ts
+  s_a8137800e380bc::t_e7f5782cc39d49 3,5,9-25
+src/content/index.ts
+  s_a8137800e380bc::t_7539991c193739 5-8,10,45-61,86,92,96-100,114-117,119-123,127,131-146,159-162,177,215,235-236,243,251,256-260
+src/instantiate/index.ts
+  s_a8137800e380bc::t_994aba2be0db9e 6-9,12,19,21,45,49-50,70-118,181,183,192,194-195
+tsconfig.e2e.json
+  s_a8137800e380bc::t_6e47cab2a1e33f 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "993fad64257b676e8b5c3230c7148699f1b846ee",
+  "prompts": {},
+  "sessions": {
+    "s_084a3ba26438ac": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a1d70cfc4bc531160",
+        "model": "unknown"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_3b2abc05d4aebd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cb2d06-8e5b-4f15-893d-173b2ae45764",
+        "model": "claude-fable-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_63d163699a8600": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "db5a9872-d59e-470c-9cb3-8e3fc1478ba8",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_a8137800e380bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e19e05f8-cf7f-4c99-b211-3932115db6d2",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_ad479731e58ec2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbbc2a33bffePpMGgOo3IcWJlK",
+        "model": "auto:balanced"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_cc7ba07e7a922c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbbdab62dfferGHSuIt6zjO3Yk",
+        "model": "auto:balanced"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
