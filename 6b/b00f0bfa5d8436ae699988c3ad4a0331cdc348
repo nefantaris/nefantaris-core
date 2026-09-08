@@ -1,0 +1,26 @@
+.github/workflows/publish.yml
+  s_5a3d4b0ee67480::t_599ec0548d8201 1-60
+README.md
+  s_5a3d4b0ee67480::t_cf25b5bf41cea6 67-91
+package.json
+  s_5a3d4b0ee67480::t_1de8bbe9d3ed9b 29-30
+  s_5a3d4b0ee67480::t_d3e0292d52bc50 3,49-56
+package-lock.json
+  s_5a3d4b0ee67480::t_dd0f54528fa424 3,9,31-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "6bb00f0bfa5d8436ae699988c3ad4a0331cdc348",
+  "prompts": {},
+  "sessions": {
+    "s_5a3d4b0ee67480": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3a410814-3db5-486e-9f73-20832aaea094",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
