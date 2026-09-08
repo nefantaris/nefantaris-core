@@ -6,12 +6,16 @@ import type { ThemeManifest } from "../themes/manifest.js";
 import { loadPluginManifest, type PluginManifest } from "./manifest.js";
 import { installPluginDependencies, pluginPackagePath } from "./store.js";
 
-export type ResolvedPlugins = {
+export type LoadedPlugins = {
     plugins: PluginManifest[];
+    dependencies: Record<string, string>;
+};
+
+export type ResolvedPlugins = LoadedPlugins & {
     aliases: Record<string, string>;
 };
 
-type ResolvePluginsOptions = {
+type LoadPluginsOptions = {
     enabled: string[];
     configPath: string;
     manifest: ThemeManifest;
@@ -82,13 +86,13 @@ const mergeDependencies = (
     return dependencies;
 };
 
-export const resolvePlugins = async ({
+export const loadPlugins = async ({
     enabled,
     configPath,
     manifest,
     searchDirs,
     isThemeWorkspace,
-}: ResolvePluginsOptions): Promise<ResolvedPlugins> => {
+}: LoadPluginsOptions): Promise<LoadedPlugins> => {
     if (!isThemeWorkspace) {
         assertRequiresAreEnabled(manifest, enabled, configPath);
     }
@@ -104,19 +108,24 @@ export const resolvePlugins = async ({
         }
         plugins.push(plugin);
     }
-    const dependencies = mergeDependencies(plugins);
-    await installPluginDependencies(dependencies);
-    return {
-        plugins,
-        aliases: Object.fromEntries(
-            Object.keys(dependencies)
-                .sort()
-                .map((packageName) => [
-                    packageName,
-                    pluginPackagePath(packageName),
-                ])
-        ),
-    };
+    return { plugins, dependencies: mergeDependencies(plugins) };
+};
+
+const storeAliases = (
+    dependencies: Record<string, string>
+): Record<string, string> =>
+    Object.fromEntries(
+        Object.keys(dependencies)
+            .sort()
+            .map((packageName) => [packageName, pluginPackagePath(packageName)])
+    );
+
+export const resolvePlugins = async (
+    options: LoadPluginsOptions
+): Promise<ResolvedPlugins> => {
+    const loaded = await loadPlugins(options);
+    await installPluginDependencies(loaded.dependencies);
+    return { ...loaded, aliases: storeAliases(loaded.dependencies) };
 };
 
 export const pluginTsconfigPaths = (

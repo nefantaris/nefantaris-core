@@ -3,6 +3,11 @@ import { join } from "node:path";
 import { readStringArray } from "./manifest.js";
 import { NefantarisError } from "./NefantarisError.js";
 import { isRecord } from "./narrow.js";
+import {
+    themeReferenceFrom,
+    type ThemeReference,
+    type ThemeReferenceLabels,
+} from "./themes/reference.js";
 
 export type NavItem = {
     label: string;
@@ -13,9 +18,36 @@ export type NavItem = {
 export type SiteConfig = {
     configPath: string;
     name: string;
-    themeSource: string;
+    theme: ThemeReference;
     nav: NavItem[];
     plugins: string[];
+};
+
+const themeLabels = (configPath: string): ThemeReferenceLabels => ({
+    prefix: `${configPath}: `,
+    source: '"theme.source"',
+    version: '"theme.version"',
+});
+
+const readTheme = (value: unknown, configPath: string): ThemeReference => {
+    if (!isRecord(value)) {
+        throw new NefantarisError(`${configPath}: "theme" must be an object`);
+    }
+    const { source, version } = value;
+    if (typeof source !== "string" || source === "") {
+        throw new NefantarisError(
+            `${configPath}: "theme.source" must be a non-empty string`
+        );
+    }
+    if (
+        version !== undefined &&
+        (typeof version !== "string" || version === "")
+    ) {
+        throw new NefantarisError(
+            `${configPath}: "theme.version" must be a non-empty string`
+        );
+    }
+    return themeReferenceFrom(source, version, themeLabels(configPath));
 };
 
 const readNavItem = (
@@ -84,19 +116,10 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
             `${configPath}: "name" must be a non-empty string`
         );
     }
-    if (!isRecord(theme)) {
-        throw new NefantarisError(`${configPath}: "theme" must be an object`);
-    }
-    const { source } = theme;
-    if (typeof source !== "string" || source === "") {
-        throw new NefantarisError(
-            `${configPath}: "theme.source" must be a non-empty string`
-        );
-    }
     return {
         configPath,
         name,
-        themeSource: source,
+        theme: readTheme(theme, configPath),
         nav: readNav(nav, "nav", configPath),
         plugins: readStringArray(parsed, "plugins", configPath, "plugin names"),
     };

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import { Router } from "wouter";
 import App from "./App";
+import { routes } from "./generated/content";
 import { headForPath } from "./nefantaris/head";
 
 export type RenderResult = {
@@ -21,3 +22,5 @@ export const render = (path: string): RenderResult => {
     const head = headForPath(path);
     return { appHtml, title: head.title, description: head.description };
 };
+
+export const routePaths: string[] = routes.map((entry) => entry.path);

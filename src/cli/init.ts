@@ -1,19 +1,47 @@
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import {
+    existsSync,
+    mkdirSync,
+    readdirSync,
+    rmSync,
+    writeFileSync,
+} from "node:fs";
+import { basename, join, resolve } from "node:path";
 import { readCoreVersion } from "../coreVersion.js";
 import { NefantarisError } from "../NefantarisError.js";
-import { loadThemeManifest } from "../themes/manifest.js";
+import { loadThemeManifest, type ThemeManifest } from "../themes/manifest.js";
+import {
+    localThemeVersion,
+    themeReferenceFrom,
+    type ThemeReference,
+    type ThemeReferenceLabels,
+} from "../themes/reference.js";
+import { resolveThemeDir } from "../themes/resolve.js";
 import { packageNameFrom } from "./packageName.js";
+
+export const defaultThemeSource = "../nefantaris-theme-base";
+
+const initThemeLabels: ThemeReferenceLabels = {
+    prefix: "",
+    source: "--theme",
+    version: "--theme-version",
+};
+
+const configTheme = (
+    theme: ThemeReference
+): { source: string; version: string } =>
+    theme.kind === "local"
+        ? { source: theme.path, version: localThemeVersion }
+        : { source: theme.url, version: theme.version };
 
 const starterConfig = (
     name: string,
-    themeSource: string,
+    theme: ThemeReference,
     plugins: string[]
 ): string =>
     `${JSON.stringify(
         {
             name,
-            theme: { source: themeSource, version: "local" },
+            theme: configTheme(theme),
             nav: [
                 { label: "Home", href: "/" },
                 { label: "About", href: "/about" },
@@ -82,9 +110,31 @@ const localDateStamp = (date: Date): string => {
     return `${year}-${month}-${day}`;
 };
 
+const discardStartedSite = (siteDir: string, isNewDir: boolean): void => {
+    rmSync(isNewDir ? siteDir : join(siteDir, ".nefantaris"), {
+        recursive: true,
+        force: true,
+    });
+};
+
+const loadStartingTheme = async (
+    siteDir: string,
+    theme: ThemeReference
+): Promise<ThemeManifest> => {
+    const isNewDir = !existsSync(siteDir);
+    mkdirSync(siteDir, { recursive: true });
+    try {
+        return await loadThemeManifest(await resolveThemeDir(siteDir, theme));
+    } catch (error) {
+        discardStartedSite(siteDir, isNewDir);
+        throw error;
+    }
+};
+
 export const runInit = async (
     siteDirArg: string,
-    themeSourceArg = "../nefantaris-theme-base"
+    themeSourceArg = defaultThemeSource,
+    themeVersionArg?: string
 ): Promise<void> => {
     const siteDir = resolve(process.cwd(), siteDirArg);
     const name = basename(siteDir);
@@ -96,18 +146,21 @@ export const runInit = async (
     if (existsSync(siteDir) && readdirSync(siteDir).length > 0) {
         throw new NefantarisError(`${siteDir} already exists and is not empty`);
     }
-    const themeDir = resolve(siteDir, themeSourceArg);
-    const manifest = await loadThemeManifest(themeDir);
+    const theme = themeReferenceFrom(
+        themeSourceArg,
+        themeVersionArg,
+        initThemeLabels
+    );
+    const manifest = await loadStartingTheme(siteDir, theme);
     const plugins = [...manifest.requires];
     const coreVersion = await readCoreVersion();
     const today = localDateStamp(new Date());
-    mkdirSync(siteDir, { recursive: true });
     mkdirSync(`${siteDir}/content/pages`, { recursive: true });
     mkdirSync(`${siteDir}/content/posts`, { recursive: true });
     mkdirSync(`${siteDir}/assets`, { recursive: true });
     writeFileSync(
         `${siteDir}/nefantaris.json`,
-        starterConfig(name, themeSourceArg, plugins)
+        starterConfig(name, theme, plugins)
     );
     writeFileSync(
         `${siteDir}/package.json`,

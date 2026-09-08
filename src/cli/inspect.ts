@@ -1,5 +1,6 @@
-import { loadSiteConfig, type NavItem } from "../config.js";
-import { loadThemeManifest } from "../themes/manifest.js";
+import { resolve } from "node:path";
+import type { NavItem } from "../config.js";
+import { loadSiteManifest } from "./prepareSite.js";
 
 export type SiteInspection = {
     contract: number;
@@ -14,12 +15,8 @@ export type SiteInspection = {
 };
 
 export const runInspect = async (siteDirArg: string): Promise<void> => {
-    const { resolve } = await import("node:path");
     const siteDir = resolve(process.cwd(), siteDirArg);
-    const config = await loadSiteConfig(siteDir);
-    const manifest = await loadThemeManifest(
-        resolve(siteDir, config.themeSource)
-    );
+    const { config, manifest } = await loadSiteManifest(siteDir);
     const inspection: SiteInspection = {
         contract: 1,
         site: {

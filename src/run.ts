@@ -67,3 +67,49 @@ export const runCommand = (
             );
         });
     });
+
+export type CapturedCommand = {
+    exitCode: number;
+    stdout: string;
+    stderr: string;
+};
+
+const isMissingExecutable = (error: NodeJS.ErrnoException): boolean =>
+    error.code === "ENOENT";
+
+export const captureCommand = (
+    command: string,
+    args: string[],
+    cwd: string,
+    env: Record<string, string> = {}
+): Promise<CapturedCommand> =>
+    new Promise((resolvePromise, rejectPromise) => {
+        const plan = windowsSafe(command, args);
+        const child = spawn(plan.command, plan.args, {
+            cwd,
+            stdio: ["ignore", "pipe", "pipe"],
+            env: { ...process.env, ...env },
+        });
+        let stdout = "";
+        let stderr = "";
+        child.stdout.setEncoding("utf8");
+        child.stderr.setEncoding("utf8");
+        child.stdout.on("data", (chunk: string) => {
+            stdout += chunk;
+        });
+        child.stderr.on("data", (chunk: string) => {
+            stderr += chunk;
+        });
+        child.on("error", (error: NodeJS.ErrnoException) => {
+            rejectPromise(
+                isMissingExecutable(error)
+                    ? new NefantarisError(
+                          `${command} is not installed or not on PATH`
+                      )
+                    : error
+            );
+        });
+        child.on("exit", (code) => {
+            resolvePromise({ exitCode: code ?? 1, stdout, stderr });
+        });
+    });

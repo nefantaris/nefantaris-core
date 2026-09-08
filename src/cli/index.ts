@@ -4,6 +4,7 @@ import { NefantarisError } from "../NefantarisError.js";
 import { enablePlugin } from "../plugins/enable.js";
 import { runBuild } from "./build.js";
 import { runDev } from "./dev.js";
+import { runEject } from "./eject.js";
 import { runInit } from "./init.js";
 import { runInspect } from "./inspect.js";
 import { runThemeCheck } from "./themeCheck.js";
@@ -13,8 +14,8 @@ const usage = [
     "Usage:",
     "    nef build [siteDir]",
     "    nef dev [siteDir] [viteArgs...]",
-    "    nef eject [siteDir]",
-    "    nef init [siteDir] [--theme <source>]",
+    "    nef eject [siteDir] [--out <dir>]",
+    "    nef init [siteDir] [--theme <source>] [--theme-version <ref>]",
     "    nef inspect [siteDir] --json",
     "    nef theme dev [themeDir] [viteArgs...]",
     "    nef theme check [themeDir]",
@@ -22,6 +23,11 @@ const usage = [
 ].join("\n");
 
 type DirAndPassthroughArgs = { dirArg: string; passthroughArgs: string[] };
+
+type DirAndOptions = {
+    dirArg: string | undefined;
+    options: Record<string, string>;
+};
 
 const fail = (message: string): never => {
     console.error(message);
@@ -36,25 +42,45 @@ const splitDirAndPassthroughArgs = (args: string[]): DirAndPassthroughArgs => {
     return { dirArg: first, passthroughArgs: rest };
 };
 
-const runInitCommand = async (args: string[]): Promise<void> => {
-    let siteDirArg: string | undefined;
-    let themeSource: string | undefined;
+const parseDirAndOptions = (
+    args: string[],
+    allowedOptions: string[]
+): DirAndOptions => {
+    let dirArg: string | undefined;
+    const options: Record<string, string> = {};
     for (let index = 0; index < args.length; index += 1) {
         const arg = args[index];
-        if (arg === "--theme") {
+        if (allowedOptions.includes(arg)) {
             const value = args[index + 1];
-            if (themeSource !== undefined || value === undefined) {
+            if (options[arg] !== undefined || value === undefined) {
                 fail(usage);
             }
-            themeSource = value;
+            options[arg] = value;
             index += 1;
-        } else if (siteDirArg === undefined && !arg.startsWith("--")) {
-            siteDirArg = arg;
+        } else if (dirArg === undefined && !arg.startsWith("--")) {
+            dirArg = arg;
         } else {
             fail(usage);
         }
     }
-    await runInit(siteDirArg ?? ".", themeSource);
+    return { dirArg, options };
+};
+
+const runInitCommand = async (args: string[]): Promise<void> => {
+    const { dirArg, options } = parseDirAndOptions(args, [
+        "--theme",
+        "--theme-version",
+    ]);
+    await runInit(
+        dirArg ?? ".",
+        options["--theme"],
+        options["--theme-version"]
+    );
+};
+
+const runEjectCommand = async (args: string[]): Promise<void> => {
+    const { dirArg, options } = parseDirAndOptions(args, ["--out"]);
+    await runEject(dirArg ?? ".", options["--out"]);
 };
 
 const runThemeCommand = async (args: string[]): Promise<void> => {
@@ -101,7 +127,7 @@ try {
     } else if (command === "plugins") {
         await runPluginsCommand(args);
     } else if (command === "eject") {
-        fail("nef eject is not implemented yet");
+        await runEjectCommand(args);
     } else {
         fail(usage);
     }

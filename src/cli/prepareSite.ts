@@ -5,6 +5,12 @@ import { instantiateSite } from "../instantiate/index.js";
 import { templateDir } from "../paths.js";
 import { resolvePlugins } from "../plugins/index.js";
 import { loadThemeManifest, type ThemeManifest } from "../themes/manifest.js";
+import { resolveThemeDir } from "../themes/resolve.js";
+
+export type LoadedSiteManifest = {
+    config: SiteConfig;
+    manifest: ThemeManifest;
+};
 
 export type PreparedSite = {
     siteDir: string;
@@ -14,15 +20,21 @@ export type PreparedSite = {
     content: SiteContent;
 };
 
+export const loadSiteManifest = async (
+    siteDir: string
+): Promise<LoadedSiteManifest> => {
+    const config = await loadSiteConfig(siteDir);
+    const themeDir = await resolveThemeDir(siteDir, config.theme);
+    const manifest = await loadThemeManifest(themeDir);
+    return { config, manifest };
+};
+
 export const prepareSite = async (
     siteDirArg: string
 ): Promise<PreparedSite> => {
     const siteDir = resolve(process.cwd(), siteDirArg);
     const nefantarisDir = join(siteDir, ".nefantaris");
-    const config = await loadSiteConfig(siteDir);
-    const manifest = await loadThemeManifest(
-        resolve(siteDir, config.themeSource)
-    );
+    const { config, manifest } = await loadSiteManifest(siteDir);
     const plugins = await resolvePlugins({
         enabled: config.plugins,
         configPath: config.configPath,
