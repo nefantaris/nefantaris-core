@@ -1,7 +1,9 @@
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
+import { readCoreVersion } from "../coreVersion.js";
 import { NefantarisError } from "../NefantarisError.js";
 import { loadThemeManifest } from "../themes/manifest.js";
+import { packageNameFrom } from "./packageName.js";
 
 const starterConfig = (
     name: string,
@@ -17,6 +19,19 @@ const starterConfig = (
                 { label: "About", href: "/about" },
             ],
             plugins,
+        },
+        null,
+        4
+    )}\n`;
+
+const starterPackageJson = (packageName: string, coreVersion: string): string =>
+    `${JSON.stringify(
+        {
+            name: packageName,
+            version: "0.0.0",
+            private: true,
+            scripts: { dev: "nef dev", build: "nef build" },
+            devDependencies: { "@nefantaris/core": coreVersion },
         },
         null,
         4
@@ -57,6 +72,7 @@ then publish.
 
 const starterGitignore = `.nefantaris/
 dist/
+node_modules/
 `;
 
 const localDateStamp = (date: Date): string => {
@@ -83,6 +99,7 @@ export const runInit = async (
     const themeDir = resolve(siteDir, themeSourceArg);
     const manifest = await loadThemeManifest(themeDir);
     const plugins = [...manifest.requires];
+    const coreVersion = await readCoreVersion();
     const today = localDateStamp(new Date());
     mkdirSync(siteDir, { recursive: true });
     mkdirSync(`${siteDir}/content/pages`, { recursive: true });
@@ -92,6 +109,10 @@ export const runInit = async (
         `${siteDir}/nefantaris.json`,
         starterConfig(name, themeSourceArg, plugins)
     );
+    writeFileSync(
+        `${siteDir}/package.json`,
+        starterPackageJson(packageNameFrom(name), coreVersion)
+    );
     writeFileSync(`${siteDir}/content/pages/index.md`, starterHomePage);
     writeFileSync(`${siteDir}/content/pages/about.md`, starterAboutPage);
     writeFileSync(
@@ -100,7 +121,8 @@ export const runInit = async (
     );
     writeFileSync(`${siteDir}/.gitignore`, starterGitignore);
     writeFileSync(`${siteDir}/assets/.gitkeep`, "");
+    console.log(`Created a Nefantaris site at ${siteDir} (${name}).`);
     console.log(
-        `Created a Nefantaris site at ${siteDir} (${name}). Run "nef dev ${siteDir}" to preview it.`
+        'Run "npm install" and then "npm run dev" inside it to preview it.'
     );
 };

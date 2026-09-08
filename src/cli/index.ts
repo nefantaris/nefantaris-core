@@ -21,9 +21,19 @@ const usage = [
     "    nef plugins add <name> [siteDir]",
 ].join("\n");
 
+type DirAndPassthroughArgs = { dirArg: string; passthroughArgs: string[] };
+
 const fail = (message: string): never => {
     console.error(message);
     process.exit(1);
+};
+
+const splitDirAndPassthroughArgs = (args: string[]): DirAndPassthroughArgs => {
+    const [first, ...rest] = args;
+    if (first === undefined || first.startsWith("-")) {
+        return { dirArg: ".", passthroughArgs: args };
+    }
+    return { dirArg: first, passthroughArgs: rest };
 };
 
 const runInitCommand = async (args: string[]): Promise<void> => {
@@ -48,13 +58,14 @@ const runInitCommand = async (args: string[]): Promise<void> => {
 };
 
 const runThemeCommand = async (args: string[]): Promise<void> => {
-    const [subcommand, themeDirArg, ...extraArgs] = args;
+    const [subcommand, ...rest] = args;
     if (subcommand === "dev") {
-        await runThemeDev(themeDirArg ?? ".", extraArgs);
+        const { dirArg, passthroughArgs } = splitDirAndPassthroughArgs(rest);
+        await runThemeDev(dirArg, passthroughArgs);
         return;
     }
     if (subcommand === "check") {
-        await runThemeCheck(themeDirArg ?? ".");
+        await runThemeCheck(rest[0] ?? ".");
         return;
     }
     fail(usage);
@@ -75,8 +86,8 @@ try {
     if (command === "build") {
         await runBuild(args[0] ?? ".");
     } else if (command === "dev") {
-        const [siteDirArg, ...viteArgs] = args;
-        await runDev(siteDirArg ?? ".", viteArgs);
+        const { dirArg, passthroughArgs } = splitDirAndPassthroughArgs(args);
+        await runDev(dirArg, passthroughArgs);
     } else if (command === "init") {
         await runInitCommand(args);
     } else if (command === "inspect") {

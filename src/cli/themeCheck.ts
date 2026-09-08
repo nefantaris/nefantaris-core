@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { runCommand } from "../run.js";
+import { runTool } from "../tools.js";
 import { collectThemeFiles, withExtensions } from "../themes/files.js";
 import {
     assertNoUndeclaredImports,
@@ -23,9 +23,6 @@ const prettierConfig = `${JSON.stringify(
     4
 )}\n`;
 
-const binPath = (workDir: string, name: string): string =>
-    join(workDir, "node_modules", ".bin", name);
-
 export const runThemeCheck = async (themeDirArg: string): Promise<void> => {
     const { themeDir, workDir, manifest, plugins } =
         await prepareThemeWorkspace(themeDirArg);
@@ -40,18 +37,21 @@ export const runThemeCheck = async (themeDirArg: string): Promise<void> => {
         await findUndeclaredImports(themeDir, sourceFiles, pluginPackages)
     );
 
-    await runCommand(
-        binPath(workDir, "tsc"),
+    await runTool(
+        workDir,
+        "tsc",
         ["--noEmit", "--project", join(themeDir, "tsconfig.json")],
         themeDir
     );
-    await runCommand(
-        binPath(workDir, "tsc"),
+    await runTool(
+        workDir,
+        "tsc",
         ["--noEmit", "--project", join(workDir, "tsconfig.json")],
         workDir
     );
-    await runCommand(
-        binPath(workDir, "eslint"),
+    await runTool(
+        workDir,
+        "eslint",
         [
             "--no-config-lookup",
             "--config",
@@ -63,8 +63,9 @@ export const runThemeCheck = async (themeDirArg: string): Promise<void> => {
 
     const prettierConfigPath = join(workDir, prettierConfigFileName);
     await writeFile(prettierConfigPath, prettierConfig);
-    await runCommand(
-        binPath(workDir, "prettier"),
+    await runTool(
+        workDir,
+        "prettier",
         [
             "--check",
             "--config",

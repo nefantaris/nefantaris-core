@@ -3,8 +3,7 @@ import { join } from "node:path";
 import { parseSiteContent } from "../content/index.js";
 import { writeGeneratedContent } from "../instantiate/index.js";
 import { NefantarisError } from "../NefantarisError.js";
-import { viteBinPath } from "../prerender/index.js";
-import { runCommand } from "../run.js";
+import { runTool } from "../tools.js";
 import { prepareSite } from "./prepareSite.js";
 
 export const runDev = async (
@@ -34,7 +33,7 @@ export const runDev = async (
     });
 
     try {
-        await runCommand(viteBinPath(nefantarisDir), viteArgs, nefantarisDir);
+        await runTool(nefantarisDir, "vite", viteArgs, nefantarisDir);
     } finally {
         watcher.close();
     }

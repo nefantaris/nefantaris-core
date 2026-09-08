@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import type { RouteEntry } from "../content/types.js";
 import { NefantarisError } from "../NefantarisError.js";
 import { isRecord } from "../narrow.js";
-import { runCommand } from "../run.js";
+import { runTool } from "../tools.js";
 
 type RenderOutput = { appHtml: string; title: string; description?: string };
 
@@ -18,21 +18,19 @@ type PrerenderOptions = {
 
 const notFoundRenderPath = "/__nefantaris_not_found__";
 
-export const viteBinPath = (nefantarisDir: string): string =>
-    join(nefantarisDir, "node_modules", ".bin", "vite");
-
 export const runViteBuilds = async (
     nefantarisDir: string,
     distDir: string
 ): Promise<void> => {
-    const vite = viteBinPath(nefantarisDir);
-    await runCommand(
-        vite,
+    await runTool(
+        nefantarisDir,
+        "vite",
         ["build", "--outDir", distDir, "--emptyOutDir"],
         nefantarisDir
     );
-    await runCommand(
-        vite,
+    await runTool(
+        nefantarisDir,
+        "vite",
         ["build", "--ssr", "src/entry-server.tsx", "--outDir", "dist-server"],
         nefantarisDir
     );

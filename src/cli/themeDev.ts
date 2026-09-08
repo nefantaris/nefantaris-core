@@ -1,8 +1,7 @@
 import { watch, type FSWatcher } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { viteBinPath } from "../prerender/index.js";
-import { runCommand } from "../run.js";
+import { runTool } from "../tools.js";
 import { isSkippedThemeEntry } from "../themes/files.js";
 import { installTheme } from "../themes/index.js";
 import { prepareThemeWorkspace } from "../themes/workspace.js";
@@ -42,7 +41,7 @@ export const runThemeDev = async (
         `Previewing theme "${manifest.name}" against the Nefantaris fixture corpus`
     );
     try {
-        await runCommand(viteBinPath(workDir), viteArgs, workDir);
+        await runTool(workDir, "vite", viteArgs, workDir);
     } finally {
         for (const watcher of watchers) {
             watcher.close();

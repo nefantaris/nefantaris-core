@@ -25,16 +25,24 @@ See [BRIEF.md](./BRIEF.md) for the mission and v1 scope. The `theme.json` and
 
 Once built, the engine is driven by `nef`:
 
-| Command                                 | What it does                                                |
-| --------------------------------------- | ----------------------------------------------------------- |
-| `nef init [siteDir] [--theme <source>]` | Scaffold a new site with starter content                    |
-| `nef build [siteDir]`                   | Build a site directory to static HTML                       |
-| `nef dev [siteDir]`                     | Serve the site with hot reload                              |
-| `nef inspect [siteDir] --json`          | Print the site's config, templates, and directives as JSON  |
-| `nef theme dev [themeDir]`              | Preview a theme against the fixture corpus                  |
-| `nef theme check [themeDir]`            | Validate, typecheck, lint, and format-check a theme         |
-| `nef plugins add <name> [siteDir]`      | Enable a plugin in the site's `nefantaris.json`             |
-| `nef eject [siteDir]`                   | Emit the site as a standalone React project — not built yet |
+| Command                                 | What it does                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `nef init [siteDir] [--theme <source>]` | Scaffold a site with starter content and a `package.json` with `dev`/`build` scripts |
+| `nef build [siteDir]`                   | Build a site directory to static HTML                                                |
+| `nef dev [siteDir]`                     | Serve the site with hot reload                                                       |
+| `nef inspect [siteDir] --json`          | Print the site's config, templates, and directives as JSON                           |
+| `nef theme dev [themeDir]`              | Preview a theme against the fixture corpus                                           |
+| `nef theme check [themeDir]`            | Validate, typecheck, lint, and format-check a theme                                  |
+| `nef plugins add <name> [siteDir]`      | Enable a plugin in the site's `nefantaris.json`                                      |
+| `nef eject [siteDir]`                   | Emit the site as a standalone React project — not built yet                          |
+
+## Running a site
+
+A scaffolded site's `package.json` pins `@nefantaris/core` as a devDependency,
+so inside the site `npm install` then `npm run dev` previews it and
+`npm run build` writes the deployable site to `dist/`. Pass vite flags after
+`--`, for example `npm run dev -- --port 3000`. Upgrade core with
+`npm install --save-dev @nefantaris/core@latest`.
 
 ## Layout
 
