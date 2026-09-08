@@ -1,0 +1,42 @@
+src/tools.ts
+  s_cd71ab353fe72d::t_5fe3400c0b25ee 1-22
+src/cli/init.ts
+  s_cd71ab353fe72d::t_0e0075d7031e83 27
+  s_cd71ab353fe72d::t_0a3dcc42bd94ae 3,6,28-39,75,102,112-115,124,126
+src/run.ts
+  s_cd71ab353fe72d::t_5fe3400c0b25ee 6-33,43
+  s_cd71ab353fe72d::t_d7399576baeac4 2-3,34-42,44-48,55-56
+src/prerender/index.ts
+  s_cd71ab353fe72d::t_1a027b91a5c3c1 7,25-27,31-33
+src/cli/themeCheck.ts
+  s_cd71ab353fe72d::t_1a027b91a5c3c1 3,40-42,46-48,52-54,66-68
+src/cli/themeDev.ts
+  s_cd71ab353fe72d::t_1a027b91a5c3c1 4,44
+src/cli/index.ts
+  s_cd71ab353fe72d::t_0a3dcc42bd94ae 24-25,31-38,61,63-64,68,89-90
+src/cli/dev.ts
+  s_cd71ab353fe72d::t_1a027b91a5c3c1 6,36
+src/coreVersion.ts
+  s_cd71ab353fe72d::t_5fe3400c0b25ee 1-18
+src/cli/packageName.ts
+  s_cd71ab353fe72d::t_5fe3400c0b25ee 1-11
+README.md
+  s_cd71ab353fe72d::t_336d7162ba9480 30,38-45
+  s_cd71ab353fe72d::t_0e0075d7031e83 28-29,31-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "cf6d47e47f64b24b377bc04f4a2df40f5b6ca962",
+  "prompts": {},
+  "sessions": {
+    "s_cd71ab353fe72d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2bfc29f0-1868-4245-86dd-f8aa73e47fba",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
