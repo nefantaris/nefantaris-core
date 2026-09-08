@@ -1,0 +1,61 @@
+README.md
+  s_4c73526cbab5bf::t_e687b3ba6a46a3 28-37,47-79,82-94
+e2e/commands.ts
+  s_4c73526cbab5bf::t_c0abb5903c53c1 1-53
+e2e/eject.spec.ts
+  s_4c73526cbab5bf::t_d219cc64194b4a 1-141
+e2e/tempSite.ts
+  s_4c73526cbab5bf::t_76fa9a9a2f9aa2 1-92
+e2e/themeResolve.spec.ts
+  s_4c73526cbab5bf::t_b29a59368c77fa 1-168
+site-template/.gitignore
+  s_4c73526cbab5bf::t_802e90258dcf42 11
+site-template/package.json
+  s_4c73526cbab5bf::t_e3525d0b267547 8
+site-template/scripts/build.mjs
+  s_4c73526cbab5bf::t_0e6c46859f4270 2-4,6-9,12,19,27-28,30-42,44-54,56-57,64-65,68-70,72-90
+site-template/src/entry-server.tsx
+  s_4c73526cbab5bf::t_4d6e8c6f0b3c9f 5,25-26
+src/cli/build.ts
+  s_4c73526cbab5bf::t_29367e3114b72d 2,5-6,8-12
+src/cli/eject.ts
+  s_4c73526cbab5bf::t_90555f9c375db4 1-53
+src/cli/index.ts
+  s_4c73526cbab5bf::t_59aefc762a1076 7,17-18,27-31,45-50,53,55,58,60-61,66-83,130
+src/cli/init.ts
+  s_4c73526cbab5bf::t_69b80abf7a6f94 1-8,11-18,21-35,38,44,113-133,136-137,149-154,163
+src/cli/inspect.ts
+  s_4c73526cbab5bf::t_6184cf2ffdefd8 1-3,19
+src/cli/prepareSite.ts
+  s_4c73526cbab5bf::t_5ff58a92faec14 8-13,23-31,37
+src/config.ts
+  s_4c73526cbab5bf::t_e94e3266790203 6-10,21,26-52,122
+src/instantiate/eject.ts
+  s_4c73526cbab5bf::t_e580424ce8ed21 1-123
+src/instantiate/index.ts
+  s_4c73526cbab5bf::t_2e5aa5c9ea1ab5 24-28,30,32-33,36,39,75,77,80,87,89,95,101,118,124,142-145,151,200-201
+src/plugins/index.ts
+  s_4c73526cbab5bf::t_2c99d0d67ff74b 9,11-14,18,89,95,111-128
+src/run.ts
+  s_4c73526cbab5bf::t_45ba31758d0999 70-115
+src/themes/reference.ts
+  s_4c73526cbab5bf::t_ac164732b1044f 1-46
+src/themes/resolve.ts
+  s_4c73526cbab5bf::t_bd9c563fed2e8e 1-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "a4fb63d92b6387ac5e23c125dd6da7b2ceae17d6",
+  "prompts": {},
+  "sessions": {
+    "s_4c73526cbab5bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "68acc020-5106-471a-8769-a71299b1d9b4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
