@@ -1,6 +1,6 @@
 {
     "name": "@nefantaris/core",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "Turns markdown content repos into prerendered static React sites",
     "license": "MIT",
     "author": "Adam Sturge",
@@ -26,7 +26,8 @@
         "test:e2e:ui": "npm run build:fixture && playwright test --ui",
         "lighthouse": "npm run build:fixture && lhci autorun",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "prepublishOnly": "npm run build"
     },
     "dependencies": {
         "remark-directive": "4.0.0",
@@ -45,5 +46,13 @@
         "prettier": "3.9.6",
         "tsx": "4.23.12",
         "typescript": "7.0.2"
+    },
+    "files": [
+        "dist",
+        "site-template",
+        "fixtures/demo-site"
+    ],
+    "engines": {
+        "node": ">=20.19.0"
     }
 }

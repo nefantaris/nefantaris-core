@@ -64,6 +64,31 @@ they cover the real prerendered HTML rather than an approximation of it.
 - `npm run lighthouse` runs Lighthouse CI over five routes and asserts the
   thresholds in [lighthouserc.json](./lighthouserc.json).
 
+## Publishing
+
+Releases happen in CI only — nobody publishes from a laptop. Bump the version,
+merge to `main`, then push a matching tag:
+
+```
+npm version minor
+git push --follow-tags
+```
+
+`.github/workflows/publish.yml` refuses to run if the tag and the manifest
+version disagree, and skips the publish entirely if that version is already on
+the registry, so a re-run after a partial failure is safe.
+
+Authentication is npm trusted publishing (OIDC) — there is no npm token in
+this repository. The package needs a trusted publisher on npmjs.com pointing
+at `nefantaris/nefantaris-core` and the workflow filename `publish.yml`; the
+fields are case-sensitive and must match exactly. Provenance attestations are
+generated automatically.
+
+The `files` field is deliberately narrow: `dist`, `site-template`, and
+`fixtures/demo-site`. That last one is a runtime asset, not test data —
+`nef theme dev` copies it to materialize a preview site — so removing it
+breaks theme development.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).
