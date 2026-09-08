@@ -1,0 +1,16 @@
+package-lock.json
+  h_f6cc9af9c0f13a 3,9
+package.json
+  h_f6cc9af9c0f13a 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "4fba2a46637cc25f630ecf28af8bb85fac704ce7",
+  "prompts": {},
+  "humans": {
+    "h_f6cc9af9c0f13a": {
+      "author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
