@@ -5,7 +5,6 @@ import type { SiteConfig } from "../config.js";
 import type { SiteContent } from "../content/index.js";
 import { isRecord } from "../narrow.js";
 import { NefantarisError } from "../NefantarisError.js";
-import { pluginStoreDir } from "../paths.js";
 import { pluginTsconfigPaths, type ResolvedPlugins } from "../plugins/index.js";
 import { runCommand } from "../run.js";
 import { installTheme } from "../themes/index.js";
@@ -72,27 +71,27 @@ export const writeGeneratedContent = async (
     );
 };
 
-const renderGeneratedPlugins = (aliases: Record<string, string>): string =>
+type GeneratedPlugins = Pick<ResolvedPlugins, "aliases" | "roots">;
+
+export const noGeneratedPlugins: GeneratedPlugins = { aliases: {}, roots: [] };
+
+const renderGeneratedPlugins = ({ aliases, roots }: GeneratedPlugins): string =>
     [
         `export const pluginAliases: Record<string, string> = ${JSON.stringify(aliases, null, 4)};`,
         "",
-        `export const pluginRoots: string[] = ${JSON.stringify(
-            Object.keys(aliases).length === 0 ? [] : [pluginStoreDir],
-            null,
-            4
-        )};`,
+        `export const pluginRoots: string[] = ${JSON.stringify(roots, null, 4)};`,
         "",
     ].join("\n");
 
 export const writeGeneratedPlugins = async (
     nefantarisDir: string,
-    aliases: Record<string, string>
+    plugins: GeneratedPlugins
 ): Promise<void> => {
     const generatedDir = join(nefantarisDir, "src", "generated");
     await mkdir(generatedDir, { recursive: true });
     await writeFile(
         join(generatedDir, "plugins.ts"),
-        renderGeneratedPlugins(aliases)
+        renderGeneratedPlugins(plugins)
     );
 };
 
@@ -197,7 +196,7 @@ export const instantiateSite = async ({
     await ensureSiteGitignore(siteDir);
     await installTheme({ siteDir, nefantarisDir, manifest });
     await writeGeneratedContent(nefantarisDir, config, content);
-    await writeGeneratedPlugins(nefantarisDir, plugins.aliases);
+    await writeGeneratedPlugins(nefantarisDir, plugins);
     await writeTsconfigPaths(nefantarisDir, plugins.aliases);
     await copyAssets(siteDir, nefantarisDir);
     await ensureDependencies(nefantarisDir, previousPackageJson);

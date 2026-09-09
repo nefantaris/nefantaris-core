@@ -111,31 +111,6 @@ export const readComponentMap = (
     return paths;
 };
 
-export const readStringArray = (
-    source: Record<string, unknown>,
-    key: string,
-    manifestPath: string,
-    itemDescription: string
-): string[] => {
-    const value = source[key];
-    if (value === undefined) {
-        return [];
-    }
-    if (!Array.isArray(value)) {
-        throw new NefantarisError(
-            `${manifestPath}: "${key}" must be an array of ${itemDescription}`
-        );
-    }
-    return value.map((entry: unknown, index) => {
-        if (typeof entry !== "string" || entry === "") {
-            throw new NefantarisError(
-                `${manifestPath}: "${key}[${String(index)}]" must be a non-empty string`
-            );
-        }
-        return entry;
-    });
-};
-
 export const assertKnownKeys = (
     source: Record<string, unknown>,
     key: string,

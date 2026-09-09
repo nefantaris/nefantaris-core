@@ -1,8 +1,9 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { pluginStoreDir } from "../paths.js";
 import { runCommand } from "../run.js";
+
+const storeDirName = "plugin-store";
 
 const storePackageJson = (dependencies: Record<string, string>): string =>
     `${JSON.stringify(
@@ -21,30 +22,32 @@ const storePackageJson = (dependencies: Record<string, string>): string =>
         4
     )}\n`;
 
-export const pluginPackagePath = (packageName: string): string =>
-    join(pluginStoreDir, "node_modules", ...packageName.split("/"));
+export const pluginStoreDir = (nefantarisDir: string): string =>
+    join(nefantarisDir, storeDirName);
+
+export const pluginPackagePath = (
+    storeDir: string,
+    packageName: string
+): string => join(storeDir, "node_modules", ...packageName.split("/"));
 
 export const installPluginDependencies = async (
+    storeDir: string,
     dependencies: Record<string, string>
 ): Promise<void> => {
     if (Object.keys(dependencies).length === 0) {
         return;
     }
-    await mkdir(pluginStoreDir, { recursive: true });
-    const packageJsonPath = join(pluginStoreDir, "package.json");
+    await mkdir(storeDir, { recursive: true });
+    const packageJsonPath = join(storeDir, "package.json");
     const previous = existsSync(packageJsonPath)
         ? await readFile(packageJsonPath, "utf8")
         : undefined;
     const next = storePackageJson(dependencies);
     const isInstalled =
-        existsSync(join(pluginStoreDir, "node_modules")) && previous === next;
+        existsSync(join(storeDir, "node_modules")) && previous === next;
     if (isInstalled) {
         return;
     }
     await writeFile(packageJsonPath, next);
-    await runCommand(
-        "npm",
-        ["install", "--no-audit", "--no-fund"],
-        pluginStoreDir
-    );
+    await runCommand("npm", ["install", "--no-audit", "--no-fund"], storeDir);
 };

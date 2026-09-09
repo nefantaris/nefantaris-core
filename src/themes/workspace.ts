@@ -7,6 +7,7 @@ import { instantiateSite } from "../instantiate/index.js";
 import { templateDir } from "../paths.js";
 import { pluginTsconfigPaths, resolvePlugins } from "../plugins/index.js";
 import type { ResolvedPlugins } from "../plugins/index.js";
+import { pluginStoreDir } from "../plugins/store.js";
 import {
     materializeFixtureSite,
     previewNav,
@@ -40,14 +41,16 @@ export const prepareThemeWorkspace = async (
 ): Promise<ThemeWorkspace> => {
     const themeDir = resolve(process.cwd(), themeDirArg);
     const manifest = await loadThemeManifest(themeDir);
+    const workDir = join(themeDir, themeWorkDirName);
     const plugins = await resolvePlugins({
+        siteDir: themeDir,
+        storeDir: pluginStoreDir(workDir),
         enabled: [],
         configPath: join(themeDir, themeManifestFileName),
         manifest,
         searchDirs: [themeDir],
         isThemeWorkspace: true,
     });
-    const workDir = join(themeDir, themeWorkDirName);
     const siteDir = await materializeFixtureSite(workDir, manifest);
     const config = await loadSiteConfig(siteDir);
     const parsed = await parseSiteContent(siteDir, manifest);

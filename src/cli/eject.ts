@@ -26,6 +26,7 @@ export const runEject = async (
     }
     const { config, manifest } = await loadSiteManifest(siteDir);
     const plugins = await loadPlugins({
+        siteDir,
         enabled: config.plugins,
         configPath: config.configPath,
         manifest,

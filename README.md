@@ -25,16 +25,16 @@ See [BRIEF.md](./BRIEF.md) for the mission and v1 scope. The `theme.json` and
 
 Once built, the engine is driven by `nef`:
 
-| Command                                                         | What it does                                                                         |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `nef init [siteDir] [--theme <source>] [--theme-version <ref>]` | Scaffold a site with starter content and a `package.json` with `dev`/`build` scripts |
-| `nef build [siteDir]`                                           | Build a site directory to static HTML                                                |
-| `nef dev [siteDir]`                                             | Serve the site with hot reload                                                       |
-| `nef inspect [siteDir] --json`                                  | Print the site's config, templates, and directives as JSON                           |
-| `nef theme dev [themeDir]`                                      | Preview a theme against the fixture corpus                                           |
-| `nef theme check [themeDir]`                                    | Validate, typecheck, lint, and format-check a theme                                  |
-| `nef plugins add <name> [siteDir]`                              | Enable a plugin in the site's `nefantaris.json`                                      |
-| `nef eject [siteDir] [--out <dir>]`                             | Emit the site as a standalone React project that builds without Nefantaris           |
+| Command                                                                     | What it does                                                                                                |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `nef init [siteDir] [--theme <source>] [--theme-version <ref>]`             | Scaffold a site with starter content and a `package.json` with `dev`/`build` scripts                        |
+| `nef build [siteDir]`                                                       | Build a site directory to static HTML                                                                       |
+| `nef dev [siteDir]`                                                         | Serve the site with hot reload                                                                              |
+| `nef inspect [siteDir] --json`                                              | Print the site's config, templates, and directives as JSON                                                  |
+| `nef theme dev [themeDir]`                                                  | Preview a theme against the fixture corpus                                                                  |
+| `nef theme check [themeDir]`                                                | Validate, typecheck, lint, and format-check a theme                                                         |
+| `nef plugins add <name> [siteDir] [--source <url\|path>] [--version <ref>]` | Enable a plugin in the site's `nefantaris.json`, pinned to a tag or commit SHA when `--source` is a git URL |
+| `nef eject [siteDir] [--out <dir>]`                                         | Emit the site as a standalone React project that builds without Nefantaris                                  |
 
 ## Running a site
 
@@ -67,13 +67,50 @@ copy of it would go silently stale. A path source keeps `"version": "local"`
 a sibling theme checkout keep working. `nef init --theme <git url>
 --theme-version <ref>` scaffolds a site pinned this way.
 
+## Plugins from git
+
+A `plugins` entry in `nefantaris.json` is either a plain name, which core
+looks up in the site's `plugins/` and `node_modules/`, then as a sibling
+directory of the site, or an object that pins the plugin to a source of its
+own:
+
+```json
+{
+    "plugins": [
+        "nefantaris-plugin-local",
+        {
+            "name": "nefantaris-plugin-gallery",
+            "source": "https://github.com/nefantaris/nefantaris-plugin-gallery.git",
+            "version": "v1.2.0"
+        }
+    ]
+}
+```
+
+The version rules are the theme's: a git source needs a tag or a full commit
+SHA, and a path source keeps `"version": "local"` (or omits it). Core
+snapshots a git plugin into `.nefantaris/plugins/` inside the site, the same
+shallow cache themes get, and installs every package the enabled plugins
+declare into `.nefantaris/plugin-store/` inside the site. Nothing lands
+outside the site, so `rm -rf .nefantaris` resets both and the next build
+refills them.
+
+`nef plugins add <name> [siteDir] --source <url> --version <ref>` writes the
+object form and refuses a name the plugin's own manifest disagrees with.
+
+A theme pins the plugins it `requires` the same way, except that a `requires`
+source must be a git URL — a path pin would not survive the theme being used
+from anywhere else. `nef init` copies those entries into the new site's
+`plugins` verbatim, pins included, and a site entry wins over the theme's
+by name.
+
 ## Ejecting
 
 `nef eject [siteDir] [--out <dir>]` writes the fully instantiated project —
 template, theme, parsed content, assets — to `<siteDir>/ejected/` (gitignored)
 or the `--out` directory, which must be empty. Every package the enabled
 plugins provide becomes an exact-pinned entry in the ejected `package.json`,
-and the Vite aliases and tsconfig `paths` that pointed into core's plugin
+and the Vite aliases and tsconfig `paths` that pointed into the site's plugin
 store are gone, so `npm install` then `npm run build` inside it prerenders
 the same `dist/` that `nef build` produces, with no Nefantaris dependency.
 
@@ -85,8 +122,9 @@ the same `dist/` that `nef build` produces, with no Nefantaris dependency.
 | `src/config.ts`       | `nefantaris.json` — name, theme reference, `nav`, enabled plugins                                                                                                                                            |
 | `src/manifest.ts`     | Shared reading and field validation for `theme.json` and `plugin.json`                                                                                                                                       |
 | `src/content`         | Markdown + frontmatter parsing, directives, template names from the manifest                                                                                                                                 |
+| `src/sources`         | The git snapshot resolver themes and plugins share — source syntax, the tag-or-SHA version rules, and the shallow per-site cache                                                                             |
 | `src/themes`          | The git-pinned theme resolver and its per-site cache, manifest loading, the theme copy and child-theme overlay, the generated wiring module, contract types, and the fixture corpus a theme previews against |
-| `src/plugins`         | Resolving the enabled set, enforcing a theme's `requires`, installing plugin dependencies into `.plugin-store/`, and emitting Vite aliases and tsconfig paths                                                |
+| `src/plugins`         | Resolving the enabled set, enforcing a theme's `requires`, installing plugin dependencies into `.nefantaris/plugin-store/` inside the site, and emitting Vite aliases and tsconfig paths                     |
 | `src/instantiate`     | Injecting routes, content, nav, theme, and plugins into the site template, and the eject variant that unwinds plugin aliases into real dependencies                                                          |
 | `site-template/`      | The Vite/React/Wouter/Tailwind project every site is generated from; its `scripts/build.mjs` runs the client and SSR builds and prerenders every route                                                       |
 | `fixtures/demo-site`  | The fixture corpus — a content-only site covering every markdown construct, template, and directive                                                                                                          |

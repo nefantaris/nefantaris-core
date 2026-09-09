@@ -1,9 +1,9 @@
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { NefantarisError } from "../NefantarisError.js";
-import { packageRoot } from "../paths.js";
-import type { ThemeManifest } from "../themes/manifest.js";
+import { requiredPluginNames, type ThemeManifest } from "../themes/manifest.js";
 import { loadPluginManifest, type PluginManifest } from "./manifest.js";
+import { pluginNames, type PluginReference } from "./reference.js";
+import { resolvePluginDir } from "./resolve.js";
 import { installPluginDependencies, pluginPackagePath } from "./store.js";
 
 export type LoadedPlugins = {
@@ -13,48 +13,26 @@ export type LoadedPlugins = {
 
 export type ResolvedPlugins = LoadedPlugins & {
     aliases: Record<string, string>;
+    roots: string[];
 };
 
 type LoadPluginsOptions = {
-    enabled: string[];
+    siteDir: string;
+    enabled: PluginReference[];
     configPath: string;
     manifest: ThemeManifest;
     searchDirs: string[];
     isThemeWorkspace: boolean;
 };
 
-const pluginSearchPaths = (name: string, searchDirs: string[]): string[] => {
-    const candidates = searchDirs.flatMap((dir) => [
-        join(dir, "plugins", name),
-        join(dir, "node_modules", name),
-        join(dirname(dir), name),
-    ]);
-    candidates.push(join(packageRoot, "node_modules", name));
-    return [...new Set(candidates)];
-};
-
-export const resolvePluginDir = (
-    name: string,
-    searchDirs: string[]
-): string => {
-    const candidates = pluginSearchPaths(name, searchDirs);
-    const found = candidates.find((candidate) => existsSync(candidate));
-    if (found === undefined) {
-        throw new NefantarisError(
-            `Plugin "${name}" was not found. Nefantaris looked in:\n${candidates
-                .map((candidate) => `    ${candidate}`)
-                .join("\n")}`
-        );
-    }
-    return found;
-};
+type ResolvePluginsOptions = LoadPluginsOptions & { storeDir: string };
 
 const assertRequiresAreEnabled = (
     manifest: ThemeManifest,
     enabled: string[],
     configPath: string
 ): void => {
-    for (const name of manifest.requires) {
+    for (const name of requiredPluginNames(manifest)) {
         if (!enabled.includes(name)) {
             throw new NefantarisError(
                 `${configPath}: theme "${manifest.name}" requires the plugin "${name}", which is not listed in "plugins" — run: nef plugins add ${name}`
@@ -62,6 +40,24 @@ const assertRequiresAreEnabled = (
         }
     }
 };
+
+const withUnlistedRequirements = (
+    enabled: PluginReference[],
+    manifest: ThemeManifest
+): PluginReference[] => {
+    const enabledNames = pluginNames(enabled);
+    return [
+        ...enabled,
+        ...manifest.requires.filter(
+            (requirement) => !enabledNames.includes(requirement.name)
+        ),
+    ];
+};
+
+const nameMismatchHint = (reference: PluginReference): string =>
+    reference.kind === "named"
+        ? "the manifest name and the directory name must match"
+        : `the manifest name and the "name" the plugin is pinned under must match`;
 
 const mergeDependencies = (
     plugins: PluginManifest[]
@@ -87,6 +83,7 @@ const mergeDependencies = (
 };
 
 export const loadPlugins = async ({
+    siteDir,
     enabled,
     configPath,
     manifest,
@@ -94,16 +91,19 @@ export const loadPlugins = async ({
     isThemeWorkspace,
 }: LoadPluginsOptions): Promise<LoadedPlugins> => {
     if (!isThemeWorkspace) {
-        assertRequiresAreEnabled(manifest, enabled, configPath);
+        assertRequiresAreEnabled(manifest, pluginNames(enabled), configPath);
     }
-    const names = [...new Set([...enabled, ...manifest.requires])];
     const plugins: PluginManifest[] = [];
-    for (const name of names) {
-        const pluginDir = resolvePluginDir(name, searchDirs);
+    for (const reference of withUnlistedRequirements(enabled, manifest)) {
+        const pluginDir = await resolvePluginDir(
+            siteDir,
+            reference,
+            searchDirs
+        );
         const plugin = await loadPluginManifest(pluginDir);
-        if (plugin.name !== name) {
+        if (plugin.name !== reference.name) {
             throw new NefantarisError(
-                `${join(pluginDir, "plugin.json")}: "name" is "${plugin.name}" but the plugin was enabled as "${name}" — the manifest name and the directory name must match`
+                `${join(pluginDir, "plugin.json")}: "name" is "${plugin.name}" but the plugin was enabled as "${reference.name}" — ${nameMismatchHint(reference)}`
             );
         }
         plugins.push(plugin);
@@ -112,20 +112,27 @@ export const loadPlugins = async ({
 };
 
 const storeAliases = (
+    storeDir: string,
     dependencies: Record<string, string>
 ): Record<string, string> =>
     Object.fromEntries(
         Object.keys(dependencies)
             .sort()
-            .map((packageName) => [packageName, pluginPackagePath(packageName)])
+            .map((packageName) => [
+                packageName,
+                pluginPackagePath(storeDir, packageName),
+            ])
     );
 
-export const resolvePlugins = async (
-    options: LoadPluginsOptions
-): Promise<ResolvedPlugins> => {
+export const resolvePlugins = async ({
+    storeDir,
+    ...options
+}: ResolvePluginsOptions): Promise<ResolvedPlugins> => {
     const loaded = await loadPlugins(options);
-    await installPluginDependencies(loaded.dependencies);
-    return { ...loaded, aliases: storeAliases(loaded.dependencies) };
+    await installPluginDependencies(storeDir, loaded.dependencies);
+    const aliases = storeAliases(storeDir, loaded.dependencies);
+    const roots = Object.keys(aliases).length === 0 ? [] : [storeDir];
+    return { ...loaded, aliases, roots };
 };
 
 export const pluginTsconfigPaths = (

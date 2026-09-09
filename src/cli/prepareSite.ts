@@ -1,9 +1,10 @@
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { loadSiteConfig, type SiteConfig } from "../config.js";
 import { parseSiteContent, type SiteContent } from "../content/index.js";
 import { instantiateSite } from "../instantiate/index.js";
-import { templateDir } from "../paths.js";
+import { nefantarisDirFor, templateDir } from "../paths.js";
 import { resolvePlugins } from "../plugins/index.js";
+import { pluginStoreDir } from "../plugins/store.js";
 import { loadThemeManifest, type ThemeManifest } from "../themes/manifest.js";
 import { resolveThemeDir } from "../themes/resolve.js";
 
@@ -33,9 +34,11 @@ export const prepareSite = async (
     siteDirArg: string
 ): Promise<PreparedSite> => {
     const siteDir = resolve(process.cwd(), siteDirArg);
-    const nefantarisDir = join(siteDir, ".nefantaris");
+    const nefantarisDir = nefantarisDirFor(siteDir);
     const { config, manifest } = await loadSiteManifest(siteDir);
     const plugins = await resolvePlugins({
+        siteDir,
+        storeDir: pluginStoreDir(nefantarisDir),
         enabled: config.plugins,
         configPath: config.configPath,
         manifest,

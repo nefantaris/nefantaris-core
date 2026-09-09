@@ -6,9 +6,12 @@ import {
     readContainedPath,
     readManifestName,
     readManifestObject,
-    readStringArray,
 } from "../manifest.js";
 import { NefantarisError } from "../NefantarisError.js";
+import {
+    readPluginReferences,
+    type PluginRequirement,
+} from "../plugins/reference.js";
 
 export const themeManifestFileName = "theme.json";
 export const themeStylesheetFileName = "theme.css";
@@ -22,7 +25,7 @@ export type ThemeManifest = {
     layout: string;
     templates: Record<string, string>;
     directives: Record<string, string>;
-    requires: string[];
+    requires: PluginRequirement[];
 };
 
 const readTemplates = (
@@ -52,6 +55,21 @@ const readTemplates = (
     }
     return templates;
 };
+
+const readRequires = (
+    source: Record<string, unknown>,
+    manifestPath: string
+): PluginRequirement[] =>
+    readPluginReferences(source, "requires", manifestPath).map(
+        (reference, index) => {
+            if (reference.kind === "local") {
+                throw new NefantarisError(
+                    `${manifestPath}: "requires[${String(index)}].source" is a path — a theme pins the plugins it requires to a git URL and a tag or commit SHA, so the pin holds wherever the theme is used`
+                );
+            }
+            return reference;
+        }
+    );
 
 const assertThemeShape = (themeDir: string, manifestPath: string): void => {
     if (!existsSync(join(themeDir, themeStylesheetFileName))) {
@@ -94,14 +112,12 @@ export const loadThemeManifest = async (
             manifestPath,
             themeDir
         ),
-        requires: readStringArray(
-            parsed,
-            "requires",
-            manifestPath,
-            "plugin names"
-        ),
+        requires: readRequires(parsed, manifestPath),
     };
 };
+
+export const requiredPluginNames = (manifest: ThemeManifest): string[] =>
+    manifest.requires.map((requirement) => requirement.name);
 
 export const selectableTemplateNames = (manifest: ThemeManifest): string[] =>
     Object.keys(manifest.templates)

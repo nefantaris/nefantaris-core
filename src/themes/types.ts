@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { contractTypesPath } from "../paths.js";
+import { contractTypesPath, nefantarisDirName } from "../paths.js";
 
-export const themeWorkDirName = ".nefantaris";
+export const themeWorkDirName = nefantarisDirName;
 export const contractModuleName = "nefantaris";
 
 const contractTypesFileName = "types.ts";

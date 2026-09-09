@@ -19,7 +19,7 @@ const usage = [
     "    nef inspect [siteDir] --json",
     "    nef theme dev [themeDir] [viteArgs...]",
     "    nef theme check [themeDir]",
-    "    nef plugins add <name> [siteDir]",
+    "    nef plugins add <name> [siteDir] [--source <url|path>] [--version <ref>]",
 ].join("\n");
 
 type DirAndPassthroughArgs = { dirArg: string; passthroughArgs: string[] };
@@ -98,12 +98,21 @@ const runThemeCommand = async (args: string[]): Promise<void> => {
 };
 
 const runPluginsCommand = async (args: string[]): Promise<void> => {
-    const [subcommand, name, siteDirArg] = args;
-    if (subcommand === "add" && name !== undefined) {
-        await enablePlugin(resolve(process.cwd(), siteDirArg ?? "."), name);
+    const [subcommand, name, ...rest] = args;
+    if (subcommand !== "add" || name === undefined || name.startsWith("-")) {
+        fail(usage);
         return;
     }
-    fail(usage);
+    const { dirArg, options } = parseDirAndOptions(rest, [
+        "--source",
+        "--version",
+    ]);
+    await enablePlugin(
+        resolve(process.cwd(), dirArg ?? "."),
+        name,
+        options["--source"],
+        options["--version"]
+    );
 };
 
 const [command, ...args] = process.argv.slice(2);

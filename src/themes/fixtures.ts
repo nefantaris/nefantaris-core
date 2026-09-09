@@ -4,6 +4,7 @@ import type { NavItem } from "../config.js";
 import type { SiteContent } from "../content/index.js";
 import { isRecord } from "../narrow.js";
 import { fixtureSiteDir } from "../paths.js";
+import { pluginConfigEntry } from "../plugins/reference.js";
 import { selectableTemplateNames, type ThemeManifest } from "./manifest.js";
 
 const fixtureWorkDirName = "fixture";
@@ -126,7 +127,7 @@ const writeFixtureConfig = async (
     const updated = {
         ...config,
         theme: { source: manifest.themeDir, version: "local" },
-        plugins: manifest.requires,
+        plugins: manifest.requires.map(pluginConfigEntry),
     };
     await writeFile(configPath, `${JSON.stringify(updated, null, 4)}\n`);
 };

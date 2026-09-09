@@ -1,6 +1,5 @@
 node_modules
 dist/
-.plugin-store/
 .nefantaris/
 fixtures/*/tsconfig.json
 

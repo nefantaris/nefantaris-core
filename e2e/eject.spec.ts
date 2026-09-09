@@ -3,10 +3,15 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { coreDir, runNef, runNpm } from "./commands";
-import { makeTempDir, testThemeDir, writeTempSite } from "./tempSite";
+import {
+    makeTempDir,
+    testPluginDependencies,
+    testPluginName,
+    testThemeDir,
+    writeTempSite,
+    writeTestPlugin,
+} from "./tempSite";
 
-const testPluginName = "nefantaris-test-plugin";
-const testPluginDependencies = { "date-fns": "4.4.0" };
 const localTheme = { source: testThemeDir, version: "local" };
 
 type PackageJson = {
@@ -21,27 +26,13 @@ const readPackageJson = async (dir: string): Promise<PackageJson> =>
         await readFile(join(dir, "package.json"), "utf8")
     ) as PackageJson;
 
-const writeTestPlugin = async (siteDir: string): Promise<void> => {
-    const pluginDir = join(siteDir, "plugins", testPluginName);
-    await mkdir(pluginDir, { recursive: true });
-    const manifest = {
-        name: testPluginName,
-        contract: 1,
-        provides: { dependencies: testPluginDependencies },
-    };
-    await writeFile(
-        join(pluginDir, "plugin.json"),
-        `${JSON.stringify(manifest, null, 4)}\n`
-    );
-};
-
 test.describe("nef eject", () => {
     test("emits a project that installs and builds without Nefantaris", async () => {
         test.setTimeout(300_000);
         const root = await makeTempDir("eject");
         const siteDir = join(root, "site");
         await writeTempSite(siteDir, localTheme, [testPluginName]);
-        await writeTestPlugin(siteDir);
+        await writeTestPlugin(join(siteDir, "plugins", testPluginName));
         const outDir = join(root, "ejected");
 
         const ejected = await runNef(["eject", siteDir, "--out", outDir]);
@@ -66,7 +57,7 @@ test.describe("nef eject", () => {
             "src/generated/plugins.ts",
         ]) {
             expect(await readFile(join(outDir, file), "utf8")).not.toContain(
-                ".plugin-store"
+                "plugin-store"
             );
         }
         expect(

@@ -12,6 +12,9 @@ export const contractTypesPath = join(
     "types.ts"
 );
 
-export const pluginStoreDir = join(packageRoot, ".plugin-store");
-
 export const fixtureSiteDir = join(packageRoot, "fixtures", "demo-site");
+
+export const nefantarisDirName = ".nefantaris";
+
+export const nefantarisDirFor = (siteDir: string): string =>
+    join(siteDir, nefantarisDirName);

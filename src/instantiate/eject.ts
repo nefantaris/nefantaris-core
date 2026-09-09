@@ -10,6 +10,7 @@ import type { ThemeManifest } from "../themes/manifest.js";
 import {
     copyAssets,
     copyTemplate,
+    noGeneratedPlugins,
     skippedTemplateEntries,
     writeGeneratedContent,
     writeGeneratedPlugins,
@@ -107,7 +108,7 @@ export const ejectSite = async ({
     await copyTemplate(templateDir, outDir, ejectSkippedEntries);
     await installTheme({ siteDir, nefantarisDir: outDir, manifest });
     await writeGeneratedContent(outDir, config, content);
-    await writeGeneratedPlugins(outDir, {});
+    await writeGeneratedPlugins(outDir, noGeneratedPlugins);
     await copyAssets(siteDir, outDir);
     const templatePackageJsonPath = join(templateDir, "package.json");
     await writeFile(
