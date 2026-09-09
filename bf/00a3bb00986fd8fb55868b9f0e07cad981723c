@@ -1,0 +1,49 @@
+e2e/eject.spec.ts
+  s_77e635b65a3b96::t_be75fe6e1ab47f 72-74,91-94
+e2e/modes.spec.ts
+  s_77e635b65a3b96::t_88b335b0971932 1-226
+fixtures/test-theme/Layout.tsx
+  s_77e635b65a3b96::t_043371e657f254 1,19-32,39,60
+fixtures/test-theme/theme.json
+  s_77e635b65a3b96::t_3d41a0b64211a1 14-15
+site-template/index.html
+  s_77e635b65a3b96::t_1c0567c8371172 2,8-38
+site-template/src/App.tsx
+  s_77e635b65a3b96::t_1e9f72a8cfaa0d 3,10,40,59
+site-template/src/generated/content.ts
+  s_77e635b65a3b96::t_9c67998bc51860 2,16-20
+site-template/src/nefantaris/modes.ts
+  s_77e635b65a3b96::t_6731005ae6910f 1-109
+site-template/src/nefantaris/types.ts
+  s_77e635b65a3b96::t_f39fe265f6be21 55-66,73
+src/cli/dev.ts
+  s_77e635b65a3b96::t_8c05251b7449ab 5,16,21
+src/cli/inspect.ts
+  s_77e635b65a3b96::t_8c4b7aea53de28 3,17,34
+src/config.ts
+  s_77e635b65a3b96::t_4413a53bcd0e55 3-4,28,31-32,83-107,125,137
+src/instantiate/eject.ts
+  s_77e635b65a3b96::t_c0803cdd723167 5,18,109,112,114
+src/instantiate/index.ts
+  s_77e635b65a3b96::t_9419d55cecdad4 6-10,51-52,55-61,71-72,78-79,85-116,236,243,246
+src/modes.ts
+  s_77e635b65a3b96::t_1a97d01341eff4 1-126
+src/themes/manifest.ts
+  s_77e635b65a3b96::t_0b9ec58c0daa28 10,29,61-76,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "bf00a3bb00986fd8fb55868b9f0e07cad981723c",
+  "prompts": {},
+  "sessions": {
+    "s_77e635b65a3b96": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "af9eb310-625d-4060-a50f-46bad52a90be",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
