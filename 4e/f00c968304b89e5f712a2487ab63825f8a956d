@@ -1,0 +1,77 @@
+e2e/tempSite.ts
+  s_f61f199c0fba29::t_76743b90d9e7e5 12,21-24,28,35-38,47-74,81,99-116,120-139,145-157
+README.md
+  s_f61f199c0fba29::t_9b4e5ccfbfbf90 73-75
+  s_f61f199c0fba29::t_d5686117aacb81 28-37,70-72,76-106,113,125,127
+e2e/pluginResolve.spec.ts
+  s_f61f199c0fba29::t_d51b0904c6683e 1-45,47-289
+  s_f61f199c0fba29::t_0c43730b20be20 46
+e2e/eject.spec.ts
+  s_f61f199c0fba29::t_cb038b31e31329 6-13,35,60
+src/cli/eject.ts
+  s_a2e903d235c5dc::t_a34c7c5a524f47 29
+src/cli/index.ts
+  s_a2e903d235c5dc::t_cc1e019e4b5744 22,101-103,106-115
+src/cli/init.ts
+  s_a2e903d235c5dc::t_b396f69b3cf186 8,11-15,17-22,28,36-37,42,112,120,147,153
+src/cli/inspect.ts
+  s_a2e903d235c5dc::t_0973aed5ac04c4 3,21,27,31
+src/cli/prepareSite.ts
+  s_a2e903d235c5dc::t_e5790ecb4c2bcd 1,5,7,37,40-41
+src/config.ts
+  s_a2e903d235c5dc::t_e47d98ccb1baca 6-12,23,25,28,32,106
+src/instantiate/eject.ts
+  s_a2e903d235c5dc::t_bad16b329cb180 13,111
+src/instantiate/index.ts
+  s_a2e903d235c5dc::t_78b59bee804542 74-78,82,88,94,199
+src/paths.ts
+  s_a2e903d235c5dc::t_9b3c53fa5bb543 16-20
+src/plugins/enable.ts
+  s_a2e903d235c5dc::t_d5edbfcae138d0 5,7-36,40-42,49-50,54-67
+src/plugins/index.ts
+  s_f61f199c0fba29::t_11dbbeb588fde0 1,3,5-6,16,20-21,28,35,44-61,86,94,97-102,104,106,115,121-124,127-130,132-135
+src/plugins/reference.ts
+  s_f61f199c0fba29::t_2a3560f5075df2 1-117
+src/plugins/resolve.ts
+  s_a2e903d235c5dc::t_00cf9eb1171849 1-44
+src/plugins/store.ts
+  s_a2e903d235c5dc::t_e7c3ac3e32e363 6-7,25-31,34,40-41,47,52
+src/sources/reference.ts
+  s_a2e903d235c5dc::t_1486654bca070c 3,7,13-15,24,27-28,30,32,37,49-90
+src/sources/snapshot.ts
+  s_f61f199c0fba29::t_1ee561f34c2866 1-150
+src/themes/fixtures.ts
+  s_f61f199c0fba29::t_dddf36126dd40b 7,130
+src/themes/manifest.ts
+  s_a2e903d235c5dc::t_d6ee3b6a277d3e 11-14,28,59-73,115,119-121
+src/themes/resolve.ts
+  s_a2e903d235c5dc::t_bfc2d084809f0e 1-2,4-7,10,12-13
+src/themes/types.ts
+  s_a2e903d235c5dc::t_565fc4f8fb8fa7 3,5
+src/themes/workspace.ts
+  s_a2e903d235c5dc::t_477202e215ad44 10,44,46-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "4ef00c968304b89e5f712a2487ab63825f8a956d",
+  "prompts": {},
+  "sessions": {
+    "s_a2e903d235c5dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "32365e3b-e7ef-4ec2-8304-8c78cd7e23c5",
+        "model": "unknown"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    },
+    "s_f61f199c0fba29": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4a12695-5be9-45f1-9d42-07f57945fe3a",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
