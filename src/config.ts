@@ -1,5 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { assertKnownKeys } from "./manifest.js";
+import { readModeDefault, readModeList, type ModeConfig } from "./modes.js";
 import { NefantarisError } from "./NefantarisError.js";
 import { isRecord } from "./narrow.js";
 import {
@@ -23,7 +25,10 @@ export type SiteConfig = {
     theme: SourceReference;
     nav: NavItem[];
     plugins: PluginReference[];
+    modes: ModeConfig;
 };
+
+const modeConfigKeys = ["default", "exclude"];
 
 const readTheme = (value: unknown, configPath: string): SourceReference => {
     if (!isRecord(value)) {
@@ -75,6 +80,31 @@ const readNav = (
     );
 };
 
+const readModes = (value: unknown, configPath: string): ModeConfig => {
+    if (value === undefined) {
+        return { exclude: [] };
+    }
+    if (!isRecord(value)) {
+        throw new NefantarisError(`${configPath}: "modes" must be an object`);
+    }
+    assertKnownKeys(value, "modes", modeConfigKeys, configPath);
+    const modes: ModeConfig = {
+        exclude:
+            value.exclude === undefined
+                ? []
+                : readModeList(value.exclude, "modes.exclude", configPath),
+    };
+    const configuredDefault = readModeDefault(
+        value.default,
+        "modes.default",
+        configPath
+    );
+    if (configuredDefault !== undefined) {
+        modes.default = configuredDefault;
+    }
+    return modes;
+};
+
 export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
     const configPath = join(siteDir, "nefantaris.json");
     let text: string;
@@ -92,7 +122,7 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
     if (!isRecord(parsed)) {
         throw new NefantarisError(`${configPath} must contain a JSON object`);
     }
-    const { name, theme, nav } = parsed;
+    const { name, theme, nav, modes } = parsed;
     if (typeof name !== "string" || name === "") {
         throw new NefantarisError(
             `${configPath}: "name" must be a non-empty string`
@@ -104,5 +134,6 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
         theme: readTheme(theme, configPath),
         nav: readNav(nav, "nav", configPath),
         plugins: readPluginReferences(parsed, "plugins", configPath),
+        modes: readModes(modes, configPath),
     };
 };

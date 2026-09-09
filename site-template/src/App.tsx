@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
-import { nav, posts, routes, site } from "./generated/content";
+import { modeSettings, nav, posts, routes, site } from "./generated/content";
 import {
     applyHead,
     headForPath,
     normalizePath,
     routeForPath,
 } from "./nefantaris/head";
+import { useModeState } from "./nefantaris/modes";
 import { renderContent } from "./nefantaris/renderContent";
 import {
     resolvedTemplateName,
@@ -36,6 +37,7 @@ const RoutedTemplate = ({ entry }: RoutedTemplateProps) => {
 
 const App = () => {
     const [location] = useLocation();
+    const modes = useModeState(modeSettings);
     const currentPath = normalizePath(location);
     const currentEntry = routeForPath(currentPath);
     const currentTemplate =
@@ -54,6 +56,7 @@ const App = () => {
             routes={routeSummaries}
             currentPath={currentPath}
             template={currentTemplate}
+            modes={modes}
         >
             <Switch location={currentPath}>
                 {routes.map((entry) => (

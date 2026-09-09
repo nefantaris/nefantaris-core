@@ -52,12 +52,25 @@ export type RouteSummary = {
     order?: number;
 };
 
+export type Mode = "light" | "dark";
+
+export type ModeDefault = Mode | "system";
+
+export type ModeSettings = { available: Mode[]; default: ModeDefault };
+
+export type ModeState = {
+    available: Mode[];
+    current: Mode;
+    set: (mode: Mode) => void;
+};
+
 export type LayoutProps = PropsWithChildren<{
     site: SiteMeta;
     nav: NavItem[];
     routes: RouteSummary[];
     currentPath: string;
     template: string | undefined;
+    modes: ModeState;
 }>;
 
 export type TemplateProps = PropsWithChildren<{

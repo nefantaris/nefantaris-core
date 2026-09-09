@@ -1,4 +1,4 @@
-import type { LayoutProps, NavItem } from "nefantaris";
+import type { LayoutProps, ModeState, NavItem } from "nefantaris";
 import { Link } from "wouter";
 
 type NavLinkProps = {
@@ -16,12 +16,27 @@ const NavLink = ({ item, currentPath }: NavLinkProps) => (
     </Link>
 );
 
+type ModeSwitchProps = {
+    modes: ModeState;
+};
+
+const ModeSwitch = ({ modes }: ModeSwitchProps) => {
+    const next = modes.available.find((mode) => mode !== modes.current);
+
+    return next === undefined ? null : (
+        <button type="button" data-mode-switch onClick={() => modes.set(next)}>
+            {`Switch to ${next} mode`}
+        </button>
+    );
+};
+
 const Layout = ({
     site,
     nav,
     routes,
     currentPath,
     template,
+    modes,
     children,
 }: LayoutProps) => (
     <div
@@ -42,6 +57,7 @@ const Layout = ({
                     />
                 ))}
             </nav>
+            {modes.available.length > 1 && <ModeSwitch modes={modes} />}
         </header>
         <main id="main-content">{children}</main>
         <footer>

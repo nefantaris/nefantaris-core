@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { SiteConfig } from "../config.js";
 import type { SiteContent } from "../content/index.js";
+import { resolveModes } from "../modes.js";
 import { isRecord } from "../narrow.js";
 import { NefantarisError } from "../NefantarisError.js";
 import type { LoadedPlugins } from "../plugins/index.js";
@@ -14,6 +15,7 @@ import {
     skippedTemplateEntries,
     writeGeneratedContent,
     writeGeneratedPlugins,
+    writeHtmlModeAttributes,
 } from "./index.js";
 
 type EjectSiteOptions = {
@@ -104,10 +106,12 @@ export const ejectSite = async ({
     content,
     plugins,
 }: EjectSiteOptions): Promise<void> => {
+    const modes = resolveModes(config, manifest);
     await mkdir(outDir, { recursive: true });
     await copyTemplate(templateDir, outDir, ejectSkippedEntries);
+    await writeHtmlModeAttributes(outDir, modes);
     await installTheme({ siteDir, nefantarisDir: outDir, manifest });
-    await writeGeneratedContent(outDir, config, content);
+    await writeGeneratedContent(outDir, config, content, modes);
     await writeGeneratedPlugins(outDir, noGeneratedPlugins);
     await copyAssets(siteDir, outDir);
     const templatePackageJsonPath = join(templateDir, "package.json");

@@ -3,6 +3,11 @@ import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { SiteConfig } from "../config.js";
 import type { SiteContent } from "../content/index.js";
+import {
+    resolveModes,
+    systemModeDefault,
+    type ModeSettings,
+} from "../modes.js";
 import { isRecord } from "../narrow.js";
 import { NefantarisError } from "../NefantarisError.js";
 import { pluginTsconfigPaths, type ResolvedPlugins } from "../plugins/index.js";
@@ -43,10 +48,17 @@ export const copyTemplate = async (
 
 const renderGeneratedContent = (
     config: SiteConfig,
-    content: SiteContent
+    content: SiteContent,
+    modes: ModeSettings
 ): string =>
     [
-        'import type { NavItem, PostSummary, RouteEntry, SiteMeta } from "../nefantaris/types";',
+        "import type {",
+        "    ModeSettings,",
+        "    NavItem,",
+        "    PostSummary,",
+        "    RouteEntry,",
+        "    SiteMeta,",
+        '} from "../nefantaris/types";',
         "",
         `export const site: SiteMeta = ${JSON.stringify({ name: config.name }, null, 4)};`,
         "",
@@ -56,18 +68,52 @@ const renderGeneratedContent = (
         "",
         `export const posts: PostSummary[] = ${JSON.stringify(content.posts, null, 4)};`,
         "",
+        `export const modeSettings: ModeSettings = ${JSON.stringify(modes, null, 4)};`,
+        "",
     ].join("\n");
 
 export const writeGeneratedContent = async (
     nefantarisDir: string,
     config: SiteConfig,
-    content: SiteContent
+    content: SiteContent,
+    modes: ModeSettings
 ): Promise<void> => {
     const generatedDir = join(nefantarisDir, "src", "generated");
     await mkdir(generatedDir, { recursive: true });
     await writeFile(
         join(generatedDir, "content.ts"),
-        renderGeneratedContent(config, content)
+        renderGeneratedContent(config, content, modes)
+    );
+};
+
+const htmlOpenTagPattern = /<html\b[^>]*>/;
+
+const htmlOpenTag = (modes: ModeSettings): string => {
+    const attributes = [
+        'lang="en"',
+        `data-modes="${modes.available.join(" ")}"`,
+        `data-default-mode="${modes.default}"`,
+    ];
+    if (modes.default !== systemModeDefault) {
+        attributes.push(`data-mode="${modes.default}"`);
+    }
+    return `<html ${attributes.join(" ")}>`;
+};
+
+export const writeHtmlModeAttributes = async (
+    nefantarisDir: string,
+    modes: ModeSettings
+): Promise<void> => {
+    const indexHtmlPath = join(nefantarisDir, "index.html");
+    const html = await readFile(indexHtmlPath, "utf8");
+    if (!htmlOpenTagPattern.test(html)) {
+        throw new NefantarisError(
+            `${indexHtmlPath} has no <html> tag to carry the mode attributes`
+        );
+    }
+    await writeFile(
+        indexHtmlPath,
+        html.replace(htmlOpenTagPattern, htmlOpenTag(modes))
     );
 };
 
@@ -187,15 +233,17 @@ export const instantiateSite = async ({
     content,
     plugins,
 }: InstantiateSiteOptions): Promise<void> => {
+    const modes = resolveModes(config, manifest);
     const packageJsonPath = join(nefantarisDir, "package.json");
     const previousPackageJson = existsSync(packageJsonPath)
         ? await readFile(packageJsonPath, "utf8")
         : undefined;
     await mkdir(nefantarisDir, { recursive: true });
     await copyTemplate(templateDir, nefantarisDir);
+    await writeHtmlModeAttributes(nefantarisDir, modes);
     await ensureSiteGitignore(siteDir);
     await installTheme({ siteDir, nefantarisDir, manifest });
-    await writeGeneratedContent(nefantarisDir, config, content);
+    await writeGeneratedContent(nefantarisDir, config, content, modes);
     await writeGeneratedPlugins(nefantarisDir, plugins);
     await writeTsconfigPaths(nefantarisDir, plugins.aliases);
     await copyAssets(siteDir, nefantarisDir);

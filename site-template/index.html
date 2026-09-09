@@ -1,10 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-modes="light" data-default-mode="light" data-mode="light">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <!--app-head-->
+        <script>
+            (() => {
+                const root = document.documentElement;
+                const available = root.dataset.modes.split(" ");
+                const preferred = root.dataset.defaultMode;
+                const readStoredMode = () => {
+                    try {
+                        return localStorage.getItem("nefantaris-mode");
+                    } catch {
+                        return null;
+                    }
+                };
+                const systemMode = () => {
+                    const prefersDark = matchMedia(
+                        "(prefers-color-scheme: dark)"
+                    ).matches;
+                    if (prefersDark && available.includes("dark")) {
+                        return "dark";
+                    }
+                    return available.includes("light") ? "light" : available[0];
+                };
+                const stored = readStoredMode();
+                if (available.includes(stored)) {
+                    root.dataset.mode = stored;
+                } else if (preferred === "system") {
+                    root.dataset.mode = systemMode();
+                } else {
+                    root.dataset.mode = preferred;
+                }
+            })();
+        </script>
     </head>
     <body>
         <div id="root"><!--app-html--></div>

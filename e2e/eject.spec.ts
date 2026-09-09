@@ -69,6 +69,9 @@ test.describe("nef eject", () => {
         expect(existsSync(join(outDir, "src", "theme", "Layout.tsx"))).toBe(
             true
         );
+        expect(await readFile(join(outDir, "index.html"), "utf8")).toContain(
+            '<html lang="en" data-modes="light dark" data-default-mode="system">'
+        );
         expect(existsSync(join(outDir, "package-lock.json"))).toBe(false);
         expect(existsSync(join(outDir, "node_modules"))).toBe(false);
 
@@ -85,6 +88,10 @@ test.describe("nef eject", () => {
         expect(home).toContain("<title>Nefantaris Demo</title>");
         expect(home).toContain("<h1>Welcome</h1>");
         expect(home).toContain('data-template="home"');
+        expect(home).toContain(
+            '<html lang="en" data-modes="light dark" data-default-mode="system">'
+        );
+        expect(home).toContain("Switch to dark mode");
         expect(
             existsSync(
                 join(outDir, "dist", "blog", "hello-world", "index.html")

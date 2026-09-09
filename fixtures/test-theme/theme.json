@@ -11,5 +11,6 @@
     },
     "directives": {
         "gallery": "directives/Gallery.tsx"
-    }
+    },
+    "modes": ["light", "dark"]
 }

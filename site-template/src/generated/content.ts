@@ -1,4 +1,5 @@
 import type {
+    ModeSettings,
     NavItem,
     PostSummary,
     RouteEntry,
@@ -12,3 +13,8 @@ export const nav: NavItem[] = [];
 export const routes: RouteEntry[] = [];
 
 export const posts: PostSummary[] = [];
+
+export const modeSettings: ModeSettings = {
+    available: ["light"],
+    default: "light",
+};

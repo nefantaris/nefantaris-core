@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 import type { NavItem } from "../config.js";
+import { resolveModes, type ModeSettings } from "../modes.js";
 import { pluginNames } from "../plugins/reference.js";
 import { loadSiteManifest } from "./prepareSite.js";
 
@@ -13,6 +14,7 @@ export type SiteInspection = {
     templates: string[];
     directives: string[];
     plugins: string[];
+    modes: ModeSettings;
 };
 
 export const runInspect = async (siteDirArg: string): Promise<void> => {
@@ -29,6 +31,7 @@ export const runInspect = async (siteDirArg: string): Promise<void> => {
         templates: Object.keys(manifest.templates),
         directives: Object.keys(manifest.directives),
         plugins,
+        modes: resolveModes(config, manifest),
     };
     console.log(JSON.stringify(inspection, null, 4));
 };

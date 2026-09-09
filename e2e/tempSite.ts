@@ -9,6 +9,8 @@ import {
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { format } from "prettier";
+import { isRecord } from "../src/narrow.js";
 import type { PluginConfigEntry } from "../src/plugins/reference.js";
 import { runGit } from "./commands";
 import { fixtureSiteDir } from "./fixtureSite";
@@ -75,6 +77,37 @@ const repoAt = async (repoDir: string, git: Git): Promise<TestRepo> => ({
 export const makeTempDir = (label: string): Promise<string> =>
     mkdtemp(join(tmpdir(), `nefantaris-${label}-`));
 
+const readJsonObject = async (
+    filePath: string
+): Promise<Record<string, unknown>> => {
+    const parsed: unknown = JSON.parse(await readFile(filePath, "utf8"));
+    if (!isRecord(parsed)) {
+        throw new Error(`${filePath} does not contain a JSON object`);
+    }
+    return parsed;
+};
+
+const writeJsonFile = async (
+    filePath: string,
+    value: Record<string, unknown>
+): Promise<void> => {
+    await writeFile(
+        filePath,
+        await format(JSON.stringify(value, null, 4), {
+            parser: "json",
+            tabWidth: 4,
+        })
+    );
+};
+
+export const amendJsonFile = async (
+    filePath: string,
+    patch: Record<string, unknown>
+): Promise<void> => {
+    const existing = await readJsonObject(filePath);
+    await writeJsonFile(filePath, { ...existing, ...patch });
+};
+
 export const writeTempSite = async (
     siteDir: string,
     theme: ThemeConfig,
@@ -86,27 +119,23 @@ export const writeTempSite = async (
             recursive: true,
         });
     }
-    const fixtureConfig = JSON.parse(
-        await readFile(join(fixtureSiteDir, "nefantaris.json"), "utf8")
-    ) as Record<string, unknown>;
-    const config = { ...fixtureConfig, theme, plugins };
-    await writeFile(
-        join(siteDir, "nefantaris.json"),
-        `${JSON.stringify(config, null, 4)}\n`
+    const fixtureConfig = await readJsonObject(
+        join(fixtureSiteDir, "nefantaris.json")
     );
+    await writeJsonFile(join(siteDir, "nefantaris.json"), {
+        ...fixtureConfig,
+        theme,
+        plugins,
+    });
 };
 
 export const writeTestPlugin = async (pluginDir: string): Promise<void> => {
     await mkdir(pluginDir, { recursive: true });
-    const manifest = {
+    await writeJsonFile(join(pluginDir, "plugin.json"), {
         name: testPluginName,
         contract: 1,
         provides: { dependencies: testPluginDependencies },
-    };
-    await writeFile(
-        join(pluginDir, "plugin.json"),
-        `${JSON.stringify(manifest, null, 4)}\n`
-    );
+    });
 };
 
 export const writeThemeDir = async (
@@ -120,15 +149,7 @@ export const writeThemeDir = async (
     if (requires.length === 0) {
         return;
     }
-    const manifestPath = join(themeDir, "theme.json");
-    const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as Record<
-        string,
-        unknown
-    >;
-    await writeFile(
-        manifestPath,
-        `${JSON.stringify({ ...manifest, requires }, null, 4)}\n`
-    );
+    await amendJsonFile(join(themeDir, "theme.json"), { requires });
 };
 
 export const createThemeRepo = async (

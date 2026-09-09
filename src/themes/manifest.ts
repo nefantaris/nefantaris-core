@@ -7,6 +7,7 @@ import {
     readManifestName,
     readManifestObject,
 } from "../manifest.js";
+import { defaultThemeModes, readModeList, type Mode } from "../modes.js";
 import { NefantarisError } from "../NefantarisError.js";
 import {
     readPluginReferences,
@@ -25,6 +26,7 @@ export type ThemeManifest = {
     layout: string;
     templates: Record<string, string>;
     directives: Record<string, string>;
+    modes: Mode[];
     requires: PluginRequirement[];
 };
 
@@ -54,6 +56,22 @@ const readTemplates = (
         }
     }
     return templates;
+};
+
+const readModes = (
+    source: Record<string, unknown>,
+    manifestPath: string
+): Mode[] => {
+    if (source.modes === undefined) {
+        return defaultThemeModes;
+    }
+    const modes = readModeList(source.modes, "modes", manifestPath);
+    if (modes.length === 0) {
+        throw new NefantarisError(
+            `${manifestPath}: "modes" must be a non-empty array — a theme ships at least one mode`
+        );
+    }
+    return modes;
 };
 
 const readRequires = (
@@ -112,6 +130,7 @@ export const loadThemeManifest = async (
             manifestPath,
             themeDir
         ),
+        modes: readModes(parsed, manifestPath),
         requires: readRequires(parsed, manifestPath),
     };
 };
