@@ -1,0 +1,33 @@
+e2e/fixtureSite.ts
+  s_b8532755fda0ec::t_47f79c9c0fb315 21,99
+e2e/prerender.spec.ts
+  s_b8532755fda0ec::t_edeeb4f3bf16e6 37-39
+src/cli/dev.ts
+  s_b8532755fda0ec::t_b50d45d01db83f 20
+src/cli/eject.ts
+  s_b8532755fda0ec::t_d82a4ea8d7e47c 36
+src/cli/init.ts
+  s_b8532755fda0ec::t_0c52b25dd90afc 67-68
+src/cli/prepareSite.ts
+  s_b8532755fda0ec::t_7861426b7d3754 48
+src/content/index.ts
+  s_b8532755fda0ec::t_845055f1c1319d 10,234-240,243,257
+src/themes/workspace.ts
+  s_b8532755fda0ec::t_64f1a3d052e107 56,62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "eb65ff7b3aff5c5d26d348792ced48c3a8736ebf",
+  "prompts": {},
+  "sessions": {
+    "s_b8532755fda0ec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d0cc8b3-7bb8-4dc7-b204-b8b4494b57d7",
+        "model": "claude-opus-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
