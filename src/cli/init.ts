@@ -64,11 +64,9 @@ const starterPackageJson = (packageName: string, coreVersion: string): string =>
     )}\n`;
 
 const starterHomePage = `---
-title: Home
-description: Welcome to your new Nefantaris site.
+title: Your new site starts here
+description: This headline and lead come from content/pages/index.md.
 ---
-
-# Welcome
 
 This is your first page. Edit it in your editor, then publish.
 
@@ -78,8 +76,6 @@ const starterAboutPage = `---
 title: About
 description: About this site.
 ---
-
-# About
 
 Replace this page with something about you or your project.
 

@@ -18,7 +18,7 @@ export type PrerenderedRoute = {
     path: string;
     file: string;
     title: string;
-    description: string | undefined;
+    description: string;
     heading: string;
     template: string;
 };
@@ -96,7 +96,7 @@ export const prerenderedRoutes: PrerenderedRoute[] = [
         path: "/blog",
         file: "blog/index.html",
         title: `Blog — ${siteName}`,
-        description: undefined,
+        description: `Posts from ${siteName}`,
         heading: "Blog",
         template: "blogIndex",
     },

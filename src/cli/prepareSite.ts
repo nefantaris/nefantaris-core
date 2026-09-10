@@ -45,7 +45,7 @@ export const prepareSite = async (
         searchDirs: [siteDir, manifest.themeDir],
         isThemeWorkspace: false,
     });
-    const content = await parseSiteContent(siteDir, manifest);
+    const content = await parseSiteContent(siteDir, config, manifest);
     await instantiateSite({
         siteDir,
         nefantarisDir,

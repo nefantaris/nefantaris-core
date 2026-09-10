@@ -17,7 +17,7 @@ export const runDev = async (
 
     const regenerate = async (): Promise<void> => {
         try {
-            const updated = await parseSiteContent(siteDir, manifest);
+            const updated = await parseSiteContent(siteDir, config, manifest);
             await writeGeneratedContent(nefantarisDir, config, updated, modes);
         } catch (error) {
             if (error instanceof NefantarisError) {

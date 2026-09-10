@@ -7,7 +7,7 @@ import {
     type ThemeManifest,
 } from "../themes/manifest.js";
 import { parseMarkdown } from "./markdown.js";
-import type { PageMeta, PostSummary, RouteEntry } from "./types.js";
+import type { PageMeta, PostSummary, RouteEntry, SiteMeta } from "./types.js";
 
 export type SiteContent = {
     routes: RouteEntry[];
@@ -231,8 +231,16 @@ const parsePosts = async (postsDir: string): Promise<SiteContent> => {
     return { routes, posts };
 };
 
+const blogIndexRoute = (site: SiteMeta): RouteEntry => ({
+    path: "/blog",
+    template: blogIndexTemplateName,
+    meta: { title: "Blog", description: `Posts from ${site.name}` },
+    body: [],
+});
+
 export const parseSiteContent = async (
     siteDir: string,
+    site: SiteMeta,
     manifest: ThemeManifest
 ): Promise<SiteContent> => {
     const pagesDir = join(siteDir, "content", "pages");
@@ -246,12 +254,7 @@ export const parseSiteContent = async (
         const parsed = await parsePosts(postsDir);
         routes.push(...parsed.routes);
         posts.push(...parsed.posts);
-        routes.push({
-            path: "/blog",
-            template: blogIndexTemplateName,
-            meta: { title: "Blog" },
-            body: [],
-        });
+        routes.push(blogIndexRoute(site));
     }
     routes.sort(
         (first, second) =>

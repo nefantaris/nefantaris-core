@@ -34,13 +34,9 @@ for (const route of prerenderedRoutes) {
         expect(html).toContain(`<h1>${route.heading}</h1>`);
         expect(html).toContain(`data-template="${route.template}"`);
 
-        if (route.description === undefined) {
-            expect(html).not.toContain('<meta name="description"');
-        } else {
-            expect(html).toContain(
-                `<meta name="description" content="${escapeForAttribute(route.description)}"`
-            );
-        }
+        expect(html).toContain(
+            `<meta name="description" content="${escapeForAttribute(route.description)}"`
+        );
     });
 }
 
