@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
     draftRoutes,
@@ -13,6 +14,8 @@ import {
     siteName,
     unorderedRoutePaths,
 } from "./fixtureSite";
+
+const siteIconLink = '<link rel="icon" type="image/png" href="/favicon.png" />';
 
 const escapeForAttribute = (value: string): string =>
     value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
@@ -145,6 +148,31 @@ test("pages with an authored order precede unordered pages", async ({
         .allTextContents();
     expect(paths.slice(0, orderedRoutePaths.length)).toEqual(orderedRoutePaths);
     expect(paths.slice(orderedRoutePaths.length)).toEqual(unorderedRoutePaths);
+});
+
+test("site public files land at the root of the build", async ({ request }) => {
+    expect(existsSync(join(fixtureDistDir, "_redirects"))).toBe(true);
+    const redirects = await request.get("/_redirects");
+    expect(redirects.status()).toBe(200);
+    expect(await redirects.text()).toContain("/blog/hello-world");
+
+    const robots = await request.get("/robots.txt");
+    expect(robots.status()).toBe(200);
+    expect(await robots.text()).toContain("Disallow: /hidden-draft");
+
+    expect(existsSync(join(fixtureDistDir, "README.md"))).toBe(false);
+    const readme = await request.get("/README.md");
+    expect(readme.status()).toBe(404);
+});
+
+test("a site favicon replaces the template icon link", async () => {
+    expect(existsSync(join(fixtureDistDir, "favicon.png"))).toBe(true);
+    const files = [...prerenderedRoutes.map((route) => route.file), "404.html"];
+    for (const file of files) {
+        const html = await readFile(join(fixtureDistDir, file), "utf8");
+        expect(html, file).toContain(siteIconLink);
+        expect(html, file).not.toContain("favicon.svg");
+    }
 });
 
 test.describe("the markdown corpus", () => {

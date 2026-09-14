@@ -6,8 +6,10 @@ import { fixtureDistDir, previewBaseUrl, previewPort } from "./fixtureSite";
 const contentTypes: Record<string, string> = {
     ".css": "text/css",
     ".html": "text/html; charset=utf-8",
+    ".ico": "image/x-icon",
     ".js": "text/javascript",
     ".json": "application/json",
+    ".png": "image/png",
     ".svg": "image/svg+xml",
     ".txt": "text/plain; charset=utf-8",
     ".webp": "image/webp",

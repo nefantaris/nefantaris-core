@@ -74,6 +74,8 @@ test.describe("nef eject", () => {
         );
         expect(existsSync(join(outDir, "package-lock.json"))).toBe(false);
         expect(existsSync(join(outDir, "node_modules"))).toBe(false);
+        expect(existsSync(join(outDir, "public", "_redirects"))).toBe(true);
+        expect(existsSync(join(outDir, "public", "README.md"))).toBe(false);
 
         const install = await runNpm(
             ["install", "--no-audit", "--no-fund"],
@@ -92,12 +94,16 @@ test.describe("nef eject", () => {
             '<html lang="en" data-modes="light dark" data-default-mode="system">'
         );
         expect(home).toContain("Switch to dark mode");
+        expect(home).toContain(
+            '<link rel="icon" type="image/png" href="/favicon.png" />'
+        );
         expect(
             existsSync(
                 join(outDir, "dist", "blog", "hello-world", "index.html")
             )
         ).toBe(true);
         expect(existsSync(join(outDir, "dist", "404.html"))).toBe(true);
+        expect(existsSync(join(outDir, "dist", "_redirects"))).toBe(true);
         const installedDateFns = await readPackageJson(
             join(outDir, "node_modules", "date-fns")
         );

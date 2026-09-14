@@ -10,7 +10,7 @@ import { selectableTemplateNames, type ThemeManifest } from "./manifest.js";
 const fixtureWorkDirName = "fixture";
 const notFoundPreviewPath = "/nefantaris-not-found-preview";
 
-const copiedFixtureEntries = ["content", "assets", "nefantaris.json"];
+const copiedFixtureEntries = ["content", "assets", "public", "nefantaris.json"];
 const blockDirectivePattern = /^:{2,3}([A-Za-z][A-Za-z0-9-]*)/gm;
 
 export type FixtureCoverage = {

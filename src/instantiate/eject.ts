@@ -17,6 +17,7 @@ import {
     writeGeneratedPlugins,
     writeHtmlModeAttributes,
 } from "./index.js";
+import { copySitePublic, writeSiteFavicon } from "./sitePublic.js";
 
 type EjectSiteOptions = {
     siteDir: string;
@@ -113,6 +114,8 @@ export const ejectSite = async ({
     await installTheme({ siteDir, nefantarisDir: outDir, manifest });
     await writeGeneratedContent(outDir, config, content, modes);
     await writeGeneratedPlugins(outDir, noGeneratedPlugins);
+    await copySitePublic(siteDir, outDir);
+    await writeSiteFavicon(siteDir, outDir);
     await copyAssets(siteDir, outDir);
     const templatePackageJsonPath = join(templateDir, "package.json");
     await writeFile(

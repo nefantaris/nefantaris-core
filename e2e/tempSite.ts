@@ -114,7 +114,7 @@ export const writeTempSite = async (
     plugins: PluginConfigEntry[] = []
 ): Promise<void> => {
     await mkdir(siteDir, { recursive: true });
-    for (const entry of ["content", "assets"]) {
+    for (const entry of ["content", "assets", "public"]) {
         await cp(join(fixtureSiteDir, entry), join(siteDir, entry), {
             recursive: true,
         });

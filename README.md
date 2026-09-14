@@ -44,6 +44,16 @@ so inside the site `npm install` then `npm run dev` previews it and
 `--`, for example `npm run dev -- --port 3000`. Upgrade core with
 `npm install --save-dev @nefantaris/core@latest`.
 
+A `public/` directory in the site is copied to the root of the built site,
+site files winning over the template's, so `robots.txt`, `_redirects`,
+`_headers`, and `.well-known/` land where hosts expect them. The first of
+`favicon.svg`, `favicon.png`, `favicon.webp`, or `favicon.ico` found there
+becomes the site icon. Two entries are build errors: `public/assets`, because
+`/assets/` is where the site's `assets/` directory is served, and
+`public/index.html`, because it would replace the generated home page. Like
+`assets/`, `public/` is copied when core starts, so `nef dev` needs a restart
+after adding files there.
+
 ## Themes from git
 
 `theme.source` is either a path relative to the site or a git URL. A git
@@ -107,12 +117,13 @@ by name.
 ## Ejecting
 
 `nef eject [siteDir] [--out <dir>]` writes the fully instantiated project —
-template, theme, parsed content, assets — to `<siteDir>/ejected/` (gitignored)
-or the `--out` directory, which must be empty. Every package the enabled
-plugins provide becomes an exact-pinned entry in the ejected `package.json`,
-and the Vite aliases and tsconfig `paths` that pointed into the site's plugin
-store are gone, so `npm install` then `npm run build` inside it prerenders
-the same `dist/` that `nef build` produces, with no Nefantaris dependency.
+template, theme, parsed content, assets, public files — to
+`<siteDir>/ejected/` (gitignored) or the `--out` directory, which must be
+empty. Every package the enabled plugins provide becomes an exact-pinned entry
+in the ejected `package.json`, and the Vite aliases and tsconfig `paths` that
+pointed into the site's plugin store are gone, so `npm install` then
+`npm run build` inside it prerenders the same `dist/` that `nef build`
+produces, with no Nefantaris dependency.
 
 ## Layout
 

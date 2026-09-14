@@ -14,6 +14,7 @@ import { pluginTsconfigPaths, type ResolvedPlugins } from "../plugins/index.js";
 import { runCommand } from "../run.js";
 import { installTheme } from "../themes/index.js";
 import type { ThemeManifest } from "../themes/manifest.js";
+import { copySitePublic, writeSiteFavicon } from "./sitePublic.js";
 
 type InstantiateSiteOptions = {
     siteDir: string;
@@ -246,6 +247,8 @@ export const instantiateSite = async ({
     await writeGeneratedContent(nefantarisDir, config, content, modes);
     await writeGeneratedPlugins(nefantarisDir, plugins);
     await writeTsconfigPaths(nefantarisDir, plugins.aliases);
+    await copySitePublic(siteDir, nefantarisDir);
+    await writeSiteFavicon(siteDir, nefantarisDir);
     await copyAssets(siteDir, nefantarisDir);
     await ensureDependencies(nefantarisDir, previousPackageJson);
 };

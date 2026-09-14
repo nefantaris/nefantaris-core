@@ -97,6 +97,20 @@ dist/
 node_modules/
 `;
 
+const starterPublicReadme = `# public
+
+Anything in this folder is copied to the top of your published site exactly
+as it is here. Use it for files that have to live at the root:
+
+- \`favicon.png\` becomes the icon in the browser tab (\`favicon.svg\`,
+  \`favicon.webp\`, and \`favicon.ico\` work too).
+- \`_redirects\` and \`_headers\` are read by Cloudflare Pages.
+- \`robots.txt\` replaces the default one.
+
+Images and files you link to from your pages belong in \`assets/\` instead,
+where they are served at \`/assets/\`. This README is not published.
+`;
+
 const localDateStamp = (date: Date): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -152,6 +166,7 @@ export const runInit = async (
     mkdirSync(`${siteDir}/content/pages`, { recursive: true });
     mkdirSync(`${siteDir}/content/posts`, { recursive: true });
     mkdirSync(`${siteDir}/assets`, { recursive: true });
+    mkdirSync(`${siteDir}/public`, { recursive: true });
     writeFileSync(
         `${siteDir}/nefantaris.json`,
         starterConfig(name, theme, plugins)
@@ -168,6 +183,7 @@ export const runInit = async (
     );
     writeFileSync(`${siteDir}/.gitignore`, starterGitignore);
     writeFileSync(`${siteDir}/assets/.gitkeep`, "");
+    writeFileSync(`${siteDir}/public/README.md`, starterPublicReadme);
     console.log(`Created a Nefantaris site at ${siteDir} (${name}).`);
     console.log(
         'Run "npm install" and then "npm run dev" inside it to preview it.'
