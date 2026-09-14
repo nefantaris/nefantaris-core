@@ -1,0 +1,45 @@
+README.md
+  s_e8be139fc38ea4::t_46f760ca75267f 47-56,120-126
+e2e/eject.spec.ts
+  s_e8be139fc38ea4::t_2bd071d422408b 77-78,97-99,106
+e2e/prerender.spec.ts
+  s_e8be139fc38ea4::t_d8dae14b0aff55 3,18-19,153-177
+e2e/serveFixture.ts
+  s_e8be139fc38ea4::t_6a1f15ec16c09b 9,12
+e2e/sitePublic.spec.ts
+  s_e8be139fc38ea4::t_fcf3e0a4b1182c 1-57
+e2e/tempSite.ts
+  s_e8be139fc38ea4::t_5f4326ca6eb939 117
+fixtures/demo-site/public/README.md
+  s_e8be139fc38ea4::t_c042db8c0d310d 1
+fixtures/demo-site/public/_redirects
+  s_e8be139fc38ea4::t_0471ee086766e6 1
+fixtures/demo-site/public/robots.txt
+  s_e8be139fc38ea4::t_95671c03e90b2b 1-3
+src/cli/init.ts
+  s_e8be139fc38ea4::t_c26aea64c525fd 100-113,169,186
+src/instantiate/eject.ts
+  s_e8be139fc38ea4::t_0c73e83a42f656 20,117-118
+src/instantiate/index.ts
+  s_e8be139fc38ea4::t_ae9df3e2034674 17,250-251
+src/instantiate/sitePublic.ts
+  s_e8be139fc38ea4::t_4462b967adeecb 1-96
+src/themes/fixtures.ts
+  s_e8be139fc38ea4::t_a9ab9875bdc4ae 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d25509dd6a9ad0222dcce456ed1597b73f7f6cb5",
+  "prompts": {},
+  "sessions": {
+    "s_e8be139fc38ea4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0b78c3c3-2954-4f3d-b550-9b285e3c72b1",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
