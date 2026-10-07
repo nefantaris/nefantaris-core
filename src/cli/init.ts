@@ -139,18 +139,35 @@ const loadStartingTheme = async (
     }
 };
 
-export const runInit = async (
+const siteNameFor = (
+    siteDir: string,
     siteDirArg: string,
-    themeSourceArg = defaultThemeSource,
-    themeVersionArg?: string
-): Promise<void> => {
-    const siteDir = resolve(process.cwd(), siteDirArg);
+    nameArg: string | undefined
+): string => {
+    if (nameArg !== undefined) {
+        const name = nameArg.trim();
+        if (name === "") {
+            throw new NefantarisError("--name needs a site name");
+        }
+        return name;
+    }
     const name = basename(siteDir);
     if (name === "" || name === ".") {
         throw new NefantarisError(
             `Could not determine a site name from "${siteDirArg}"`
         );
     }
+    return name;
+};
+
+export const runInit = async (
+    siteDirArg: string,
+    themeSourceArg = defaultThemeSource,
+    themeVersionArg?: string,
+    nameArg?: string
+): Promise<void> => {
+    const siteDir = resolve(process.cwd(), siteDirArg);
+    const name = siteNameFor(siteDir, siteDirArg, nameArg);
     if (existsSync(siteDir) && readdirSync(siteDir).length > 0) {
         throw new NefantarisError(`${siteDir} already exists and is not empty`);
     }

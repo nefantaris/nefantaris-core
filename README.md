@@ -25,16 +25,16 @@ See [BRIEF.md](./BRIEF.md) for the mission and v1 scope. The `theme.json` and
 
 Once built, the engine is driven by `nef`:
 
-| Command                                                                     | What it does                                                                                                |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `nef init [siteDir] [--theme <source>] [--theme-version <ref>]`             | Scaffold a site with starter content and a `package.json` with `dev`/`build` scripts                        |
-| `nef build [siteDir]`                                                       | Build a site directory to static HTML                                                                       |
-| `nef dev [siteDir]`                                                         | Serve the site with hot reload                                                                              |
-| `nef inspect [siteDir] --json`                                              | Print the site's config, templates, and directives as JSON                                                  |
-| `nef theme dev [themeDir]`                                                  | Preview a theme against the fixture corpus                                                                  |
-| `nef theme check [themeDir]`                                                | Validate, typecheck, lint, and format-check a theme                                                         |
-| `nef plugins add <name> [siteDir] [--source <url\|path>] [--version <ref>]` | Enable a plugin in the site's `nefantaris.json`, pinned to a tag or commit SHA when `--source` is a git URL |
-| `nef eject [siteDir] [--out <dir>]`                                         | Emit the site as a standalone React project that builds without Nefantaris                                  |
+| Command                                                                              | What it does                                                                                                                                            |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nef init [siteDir] [--theme <source>] [--theme-version <ref>] [--name <site name>]` | Scaffold a site with starter content and a `package.json` with `dev`/`build` scripts. The site is named after its folder unless `--name` says otherwise |
+| `nef build [siteDir]`                                                                | Build a site directory to static HTML                                                                                                                   |
+| `nef dev [siteDir]`                                                                  | Serve the site with hot reload                                                                                                                          |
+| `nef inspect [siteDir] --json`                                                       | Print the site's config, templates, and directives as JSON                                                                                              |
+| `nef theme dev [themeDir]`                                                           | Preview a theme against the fixture corpus                                                                                                              |
+| `nef theme check [themeDir]`                                                         | Validate, typecheck, lint, and format-check a theme                                                                                                     |
+| `nef plugins add <name> [siteDir] [--source <url\|path>] [--version <ref>]`          | Enable a plugin in the site's `nefantaris.json`, pinned to a tag or commit SHA when `--source` is a git URL                                             |
+| `nef eject [siteDir] [--out <dir>]`                                                  | Emit the site as a standalone React project that builds without Nefantaris                                                                              |
 
 ## Running a site
 

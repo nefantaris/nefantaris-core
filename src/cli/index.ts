@@ -15,7 +15,7 @@ const usage = [
     "    nef build [siteDir]",
     "    nef dev [siteDir] [viteArgs...]",
     "    nef eject [siteDir] [--out <dir>]",
-    "    nef init [siteDir] [--theme <source>] [--theme-version <ref>]",
+    "    nef init [siteDir] [--theme <source>] [--theme-version <ref>] [--name <site name>]",
     "    nef inspect [siteDir] --json",
     "    nef theme dev [themeDir] [viteArgs...]",
     "    nef theme check [themeDir]",
@@ -70,11 +70,13 @@ const runInitCommand = async (args: string[]): Promise<void> => {
     const { dirArg, options } = parseDirAndOptions(args, [
         "--theme",
         "--theme-version",
+        "--name",
     ]);
     await runInit(
         dirArg ?? ".",
         options["--theme"],
-        options["--theme-version"]
+        options["--theme-version"],
+        options["--name"]
     );
 };
 
