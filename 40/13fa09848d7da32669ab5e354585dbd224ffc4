@@ -1,0 +1,20 @@
+README.md
+  h_f6cc9af9c0f13a 28-37
+e2e/init.spec.ts
+  h_f6cc9af9c0f13a 1-66
+src/cli/index.ts
+  h_f6cc9af9c0f13a 18,73,78-79
+src/cli/init.ts
+  h_f6cc9af9c0f13a 142-143,145-153,160-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4013fa09848d7da32669ab5e354585dbd224ffc4",
+  "prompts": {},
+  "humans": {
+    "h_f6cc9af9c0f13a": {
+      "author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
