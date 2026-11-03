@@ -145,7 +145,7 @@ For a fetch that should be debounced (e.g. a search box firing on every keystrok
 
 - Any effect that adds a listener, timer, or subscription must return a cleanup function. No exceptions.
 - Simple or related concerns may share one effect (two data loads on mount is fine). Complex or unrelated concerns get separate effects.
-- We are not strict about `exhaustive-deps`. Only add a dependency if the effect should actually re-run when it changes. Clean, intentional code beats lint compliance here; a targeted `eslint-disable-next-line react-hooks/exhaustive-deps` is the sanctioned tool when the dependency list is intentionally incomplete.
+- We are not strict about `exhaustive-deps`. Only add a dependency if the effect should actually re-run when it changes. Clean, intentional code beats lint compliance here; a targeted `oxlint-disable-next-line react-hooks/exhaustive-deps` is the sanctioned tool when the dependency list is intentionally incomplete.
 - Keep dependency arrays simple. No complex expressions or type checks inline — narrow to a simple const above the effect:
 
 ```typescript
@@ -193,7 +193,7 @@ Do not be overly aggressive about handling errors. The app is expected to work; 
 
 ## Code Comments
 
-Zero code comments. Code explains itself through descriptive names and structure; if something seems to need a comment, restructure or rename until it doesn't. The only exceptions are functional pragmas: triple-slash directives, shebangs, and targeted `eslint-disable-next-line` lines that change lint behavior.
+Zero code comments. Code explains itself through descriptive names and structure; if something seems to need a comment, restructure or rename until it doesn't. The only exceptions are functional pragmas: triple-slash directives, shebangs, and targeted `oxlint-disable-next-line` lines that change lint behavior.
 
 ## Modal Button Layout
 
@@ -220,13 +220,13 @@ When a modal has both a primary and secondary button:
 - Only use colors from the project's design tokens (Tailwind theme / CSS custom properties). Never non-computed inline styles, arbitrary hex values, or non-branded colors.
 - Follow the design system in the workspace design guide: Open Sans, comfortable spacing, `rounded-md`, no shadows, minimal animation (`duration-100`), `max-w-7xl` containers.
 - Compose conditional Tailwind classes with the `classNames()` helper in `src/utils/classNames.ts`.
-- Follow all lint rules in `eslint.config.js`.
+- Follow the oxlint rules in `site-template/.oxlintrc.json`.
 - Use existing components before building new ones.
 - Accessibility is not optional: semantic HTML, ARIA labels on interactive elements, keyboard navigation, visible focus states, WCAG AA contrast.
 
 # Commands to run
 
-- `npm run lint` fixes and reports lint errors; `npm run lint:check` verifies without modifying
+- In `site-template/`, `npm run lint` fixes and reports lint errors; `npm run lint:check` verifies without modifying
 - `npm run format` / `npm run format:check` for Prettier
 - `npm run build` must pass before work is considered done
 - `npm run test:e2e` runs the Playwright suite, where the project has one
