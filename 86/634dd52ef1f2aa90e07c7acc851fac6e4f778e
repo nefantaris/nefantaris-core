@@ -1,0 +1,70 @@
+src/cli/inspect.ts
+  s_59ac45ccf7982e::t_4ca730fb26dc36 11-12,30-31
+src/instantiate/index.ts
+  s_59ac45ccf7982e::t_77764a95ac5373 18,259
+  s_59ac45ccf7982e::t_207c85536a00e0 6,52-58,73
+site-template/src/nefantaris/types.ts
+  s_59ac45ccf7982e::t_a7c9fef8d74ebb 3,19
+site-template/src/nefantaris/headTags.ts
+  s_59ac45ccf7982e::t_9b6e5bdc180a0d 1,65
+  s_59ac45ccf7982e::t_45d9291a180519 13-15,21-60,62,64,66,68,70-85,91-92,105-107,114-122,137
+  s_59ac45ccf7982e::t_d03850e1e57351 61,63,67,69
+src/siteUrl.ts
+  s_59ac45ccf7982e::t_d03850e1e57351 3,7-12,14,34-35,46-51
+  s_59ac45ccf7982e::t_737a616fa8b84b 1-2,4-6,13,15-33,36-45,52-55
+e2e/siteUrl.spec.ts
+  s_59ac45ccf7982e::t_e9488b32a637e3 1-207,212-219
+  s_59ac45ccf7982e::t_dd83f0b83176c5 208-211
+e2e/serveFixture.ts
+  s_59ac45ccf7982e::t_6c6ebf6d5010d2 17
+src/config.ts
+  s_59ac45ccf7982e::t_d03850e1e57351 12-15,94,96
+  s_59ac45ccf7982e::t_a7438c7db81c5d 34-35,90-93,95,97-101,150,158-162
+  s_59ac45ccf7982e::t_f02331ee626953 11
+README.md
+  s_59ac45ccf7982e::t_495e36bd3bd74e 57-93,170-171,178
+src/instantiate/eject.ts
+  s_59ac45ccf7982e::t_495e36bd3bd74e 86-87
+  s_59ac45ccf7982e::t_77764a95ac5373 20,119
+site-template/src/nefantaris/sitemap.ts
+  s_59ac45ccf7982e::t_9b6e5bdc180a0d 1,30
+  s_59ac45ccf7982e::t_1b5dfa059a1fcd 2-29,31-57
+e2e/navigation.spec.ts
+  s_59ac45ccf7982e::t_6c6ebf6d5010d2 95-124
+site-template/src/nefantaris/siteUrl.ts
+  s_59ac45ccf7982e::t_9b6e5bdc180a0d 1-3,6-8
+  s_59ac45ccf7982e::t_c8b684bcb6aff3 4-5
+site-template/scripts/build.mjs
+  s_59ac45ccf7982e::t_658be521369f26 1,12,40-52,54,59-60,71
+site-template/src/entry-server.tsx
+  s_59ac45ccf7982e::t_658be521369f26 5,7,26-27
+src/content/index.ts
+  s_59ac45ccf7982e::t_d03850e1e57351 5,63-75,101
+  s_59ac45ccf7982e::t_a7c9fef8d74ebb 31,108
+src/content/types.ts
+  s_59ac45ccf7982e::t_a7c9fef8d74ebb 1,11
+site-template/README.md
+  s_59ac45ccf7982e::t_495e36bd3bd74e 13
+e2e/prerender.spec.ts
+  s_59ac45ccf7982e::t_6c6ebf6d5010d2 23-36,131-166,211-213
+src/instantiate/robotsTxt.ts
+  s_59ac45ccf7982e::t_77764a95ac5373 1-22
+e2e/eject.spec.ts
+  s_59ac45ccf7982e::t_dd83f0b83176c5 7,37-39,104-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "86634dd52ef1f2aa90e07c7acc851fac6e4f778e",
+  "prompts": {},
+  "sessions": {
+    "s_59ac45ccf7982e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fe1a2f26-ac70-4aa3-a3f2-aac3257900c5",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "adamjsturge <adamjsturge@gmail.com>"
+    }
+  }
+}
