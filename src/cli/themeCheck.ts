@@ -51,13 +51,8 @@ export const runThemeCheck = async (themeDirArg: string): Promise<void> => {
     );
     await runTool(
         workDir,
-        "eslint",
-        [
-            "--no-config-lookup",
-            "--config",
-            join(workDir, "eslint.config.js"),
-            ...sourceFiles,
-        ],
+        "oxlint",
+        ["--config", join(workDir, ".oxlintrc.json"), ...sourceFiles],
         themeDir
     );
 

@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { runCommand } from "./run.js";
 
 const toolEntries = {
-    eslint: ["eslint", "bin", "eslint.js"],
+    oxlint: ["oxlint", "bin", "oxlint"],
     prettier: ["prettier", "bin", "prettier.cjs"],
     tsc: ["typescript", "bin", "tsc"],
     vite: ["vite", "bin", "vite.js"],

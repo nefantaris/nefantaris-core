@@ -54,6 +54,9 @@ const preferWebpImages = {
 };
 
 export default {
+    meta: {
+        name: "adamjsturge",
+    },
     rules: {
         "prefer-webp-images": preferWebpImages,
     },

@@ -59,7 +59,7 @@ const renderNode = (
             <div
                 key={key}
                 data-table-scroll=""
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
                 tabIndex={0}
                 role="region"
                 aria-label={tableScrollRegionLabel}

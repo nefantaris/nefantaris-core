@@ -20,7 +20,7 @@ placeholders that keep the template a valid standalone app.
 | `npm run dev`          | Start the Vite dev server        |
 | `npm run build`        | Type-check and build to `dist/`  |
 | `npm run preview`      | Preview the production build     |
-| `npm run lint`         | Lint and auto-fix with ESLint    |
+| `npm run lint`         | Lint and auto-fix with oxlint    |
 | `npm run lint:check`   | Lint without fixing              |
 | `npm run format`       | Format with Prettier             |
 | `npm run format:check` | Check formatting without writing |
