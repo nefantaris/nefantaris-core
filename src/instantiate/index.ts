@@ -3,6 +3,7 @@ import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { SiteConfig } from "../config.js";
 import type { SiteContent } from "../content/index.js";
+import type { SiteMeta } from "../content/types.js";
 import {
     resolveModes,
     systemModeDefault,
@@ -14,6 +15,7 @@ import { pluginTsconfigPaths, type ResolvedPlugins } from "../plugins/index.js";
 import { runCommand } from "../run.js";
 import { installTheme } from "../themes/index.js";
 import type { ThemeManifest } from "../themes/manifest.js";
+import { writeRobotsTxt } from "./robotsTxt.js";
 import { copySitePublic, writeSiteFavicon } from "./sitePublic.js";
 
 type InstantiateSiteOptions = {
@@ -47,6 +49,13 @@ export const copyTemplate = async (
     }
 };
 
+const siteMetaFrom = ({ name, url, image }: SiteConfig): SiteMeta => {
+    const site: SiteMeta = { name };
+    if (url !== undefined) site.url = url;
+    if (image !== undefined) site.image = image;
+    return site;
+};
+
 const renderGeneratedContent = (
     config: SiteConfig,
     content: SiteContent,
@@ -61,7 +70,7 @@ const renderGeneratedContent = (
         "    SiteMeta,",
         '} from "../nefantaris/types";',
         "",
-        `export const site: SiteMeta = ${JSON.stringify({ name: config.name }, null, 4)};`,
+        `export const site: SiteMeta = ${JSON.stringify(siteMetaFrom(config), null, 4)};`,
         "",
         `export const nav: NavItem[] = ${JSON.stringify(config.nav, null, 4)};`,
         "",
@@ -247,6 +256,7 @@ export const instantiateSite = async ({
     await writeGeneratedContent(nefantarisDir, config, content, modes);
     await writeGeneratedPlugins(nefantarisDir, plugins);
     await writeTsconfigPaths(nefantarisDir, plugins.aliases);
+    await writeRobotsTxt(nefantarisDir, config.url);
     await copySitePublic(siteDir, nefantarisDir);
     await writeSiteFavicon(siteDir, nefantarisDir);
     await copyAssets(siteDir, nefantarisDir);

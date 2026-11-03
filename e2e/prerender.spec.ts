@@ -20,6 +20,20 @@ const siteIconLink = '<link rel="icon" type="image/png" href="/favicon.png" />';
 const escapeForAttribute = (value: string): string =>
     value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 
+const headMeta = (
+    attribute: "name" | "property",
+    key: string,
+    content: string
+): string =>
+    `<meta ${attribute}="${key}" content="${escapeForAttribute(content)}" data-nefantaris-head />`;
+
+const absoluteOnlyTags = [
+    'rel="canonical"',
+    'property="og:url"',
+    'property="og:image"',
+    'name="twitter:image"',
+];
+
 for (const route of prerenderedRoutes) {
     test(`${route.path} is prerendered to a real HTML file`, async ({
         request,
@@ -114,6 +128,42 @@ test("404.html exists and renders the notFound template", async ({
     ).toHaveAttribute("href", "/");
 });
 
+test("without a url, pages get Open Graph basics and nothing absolute", async () => {
+    for (const route of prerenderedRoutes) {
+        const html = await readFile(join(fixtureDistDir, route.file), "utf8");
+        const ogTitle = route.path === "/" ? siteName : route.heading;
+        const ogType = route.template === "post" ? "article" : "website";
+        const expectedTags = [
+            headMeta("property", "og:title", ogTitle),
+            headMeta("property", "og:site_name", siteName),
+            headMeta("property", "og:type", ogType),
+            headMeta("property", "og:description", route.description),
+            headMeta("name", "twitter:description", route.description),
+            headMeta("name", "twitter:card", "summary"),
+        ];
+        for (const tag of expectedTags) {
+            expect(html, route.file).toContain(tag);
+        }
+        for (const tag of absoluteOnlyTags) {
+            expect(html, route.file).not.toContain(tag);
+        }
+    }
+});
+
+test("without a url, the build writes no sitemap", async ({ request }) => {
+    expect(existsSync(join(fixtureDistDir, "sitemap.xml"))).toBe(false);
+    const sitemap = await request.get("/sitemap.xml");
+    expect(sitemap.status()).toBe(404);
+});
+
+test("404.html is noindex and names no canonical url", async () => {
+    const html = await readFile(join(fixtureDistDir, "404.html"), "utf8");
+    expect(html).toContain(headMeta("name", "robots", "noindex"));
+    for (const tag of absoluteOnlyTags) {
+        expect(html).not.toContain(tag);
+    }
+});
+
 test("gallery directive renders through the theme", async ({ page }) => {
     await page.goto("/gallery");
     const gallery = page.locator('[data-directive="gallery"]');
@@ -158,7 +208,9 @@ test("site public files land at the root of the build", async ({ request }) => {
 
     const robots = await request.get("/robots.txt");
     expect(robots.status()).toBe(200);
-    expect(await robots.text()).toContain("Disallow: /hidden-draft");
+    const robotsText = await robots.text();
+    expect(robotsText).toContain("Disallow: /hidden-draft");
+    expect(robotsText).not.toContain("Sitemap:");
 
     expect(existsSync(join(fixtureDistDir, "README.md"))).toBe(false);
     const readme = await request.get("/README.md");

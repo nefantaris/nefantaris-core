@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { coreDir, runNef, runNpm } from "./commands";
 import {
+    amendJsonFile,
     makeTempDir,
     testPluginDependencies,
     testPluginName,
@@ -33,6 +34,9 @@ test.describe("nef eject", () => {
         const siteDir = join(root, "site");
         await writeTempSite(siteDir, localTheme, [testPluginName]);
         await writeTestPlugin(join(siteDir, "plugins", testPluginName));
+        await amendJsonFile(join(siteDir, "nefantaris.json"), {
+            url: "https://example.com",
+        });
         const outDir = join(root, "ejected");
 
         const ejected = await runNef(["eject", siteDir, "--out", outDir]);
@@ -97,6 +101,26 @@ test.describe("nef eject", () => {
         expect(home).toContain(
             '<link rel="icon" type="image/png" href="/favicon.png" />'
         );
+        expect(home).toContain(
+            '<link rel="canonical" href="https://example.com/" data-nefantaris-head />'
+        );
+        expect(
+            await readFile(
+                join(outDir, "dist", "blog", "hello-world", "index.html"),
+                "utf8"
+            )
+        ).toContain(
+            '<meta property="og:url" content="https://example.com/blog/hello-world/" data-nefantaris-head />'
+        );
+        const sitemap = await readFile(
+            join(outDir, "dist", "sitemap.xml"),
+            "utf8"
+        );
+        expect(sitemap).toContain("<loc>https://example.com/</loc>");
+        expect(sitemap).toContain(
+            "<loc>https://example.com/blog/hello-world/</loc>"
+        );
+        expect(sitemap.match(/<url>/g)).toHaveLength(12);
         expect(
             existsSync(
                 join(outDir, "dist", "blog", "hello-world", "index.html")

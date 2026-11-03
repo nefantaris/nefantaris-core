@@ -9,6 +9,11 @@ import {
     type PluginReference,
 } from "./plugins/reference.js";
 import {
+    imageReferenceRule,
+    isImageReference,
+    readSiteUrl,
+} from "./siteUrl.js";
+import {
     readSourceReference,
     type SourceReference,
 } from "./sources/reference.js";
@@ -26,6 +31,8 @@ export type SiteConfig = {
     nav: NavItem[];
     plugins: PluginReference[];
     modes: ModeConfig;
+    url?: string;
+    image?: string;
 };
 
 const modeConfigKeys = ["default", "exclude"];
@@ -80,6 +87,18 @@ const readNav = (
     );
 };
 
+const readImage = (value: unknown, configPath: string): string | undefined => {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (typeof value !== "string" || !isImageReference(value)) {
+        throw new NefantarisError(
+            `${configPath}: "image" ${imageReferenceRule}`
+        );
+    }
+    return value;
+};
+
 const readModes = (value: unknown, configPath: string): ModeConfig => {
     if (value === undefined) {
         return { exclude: [] };
@@ -128,7 +147,7 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
             `${configPath}: "name" must be a non-empty string`
         );
     }
-    return {
+    const config: SiteConfig = {
         configPath,
         name,
         theme: readTheme(theme, configPath),
@@ -136,4 +155,9 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
         plugins: readPluginReferences(parsed, "plugins", configPath),
         modes: readModes(modes, configPath),
     };
+    const url = readSiteUrl(parsed.url, configPath);
+    const image = readImage(parsed.image, configPath);
+    if (url !== undefined) config.url = url;
+    if (image !== undefined) config.image = image;
+    return config;
 };

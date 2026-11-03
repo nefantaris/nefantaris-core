@@ -1,6 +1,6 @@
 import type { ComponentType, PropsWithChildren } from "react";
 
-export type SiteMeta = { name: string };
+export type SiteMeta = { name: string; url?: string; image?: string };
 
 export type NavItem = {
     label: string;
@@ -16,6 +16,7 @@ export type PageMeta = {
     draft?: boolean;
     template?: string;
     order?: number;
+    image?: string;
 };
 
 export type PostSummary = {

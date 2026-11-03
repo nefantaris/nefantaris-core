@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, join, relative, sep } from "node:path";
 import { NefantarisError } from "../NefantarisError.js";
+import { imageReferenceRule, isImageReference } from "../siteUrl.js";
 import {
     selectableTemplateNames,
     type ThemeManifest,
@@ -27,7 +28,7 @@ const collectMarkdownFiles = async (dir: string): Promise<string[]> => {
 
 const readOptionalString = (
     frontmatter: Record<string, unknown>,
-    key: "description" | "date" | "slug" | "template",
+    key: "description" | "date" | "slug" | "template" | "image",
     filePath: string
 ): string | undefined => {
     const value = frontmatter[key];
@@ -59,6 +60,19 @@ const readOptionalNumber = (
     return value;
 };
 
+const readOptionalImage = (
+    frontmatter: Record<string, unknown>,
+    filePath: string
+): string | undefined => {
+    const image = readOptionalString(frontmatter, "image", filePath);
+    if (image !== undefined && !isImageReference(image)) {
+        throw new NefantarisError(
+            `${filePath}: frontmatter "image" ${imageReferenceRule}`
+        );
+    }
+    return image;
+};
+
 const readMeta = (
     frontmatter: Record<string, unknown>,
     filePath: string
@@ -84,12 +98,14 @@ const readMeta = (
     const slug = readOptionalString(frontmatter, "slug", filePath);
     const template = readOptionalString(frontmatter, "template", filePath);
     const order = readOptionalNumber(frontmatter, "order", filePath);
+    const image = readOptionalImage(frontmatter, filePath);
     if (description !== undefined) meta.description = description;
     if (date !== undefined) meta.date = date;
     if (slug !== undefined) meta.slug = slug;
     if (template !== undefined) meta.template = template;
     if (draft !== undefined) meta.draft = draft;
     if (order !== undefined) meta.order = order;
+    if (image !== undefined) meta.image = image;
     return meta;
 };
 

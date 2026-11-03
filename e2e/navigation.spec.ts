@@ -92,3 +92,33 @@ test("the notFound template links back to the home route", async ({ page }) => {
     ).toBeVisible();
     expect(await isDocumentStillMarked(page)).toBe(true);
 });
+
+test("client navigation replaces the whole head tag set", async ({ page }) => {
+    const robots = page.locator('meta[name="robots"]');
+    const ogType = page.locator('meta[property="og:type"]');
+    await page.goto("/definitely-not-a-page");
+    await waitForHydration(page);
+    await expect(robots).toHaveAttribute("content", "noindex");
+    await expect(ogType).toHaveCount(0);
+
+    await page.getByRole("link", { name: `Back to ${siteName}` }).click();
+    await expect(page).toHaveURL("/");
+    await expect(robots).toHaveCount(0);
+    await expect(ogType).toHaveAttribute("content", "website");
+
+    await mainNav(page)
+        .getByRole("link", { name: "Blog", exact: true })
+        .click();
+    await page.getByRole("link", { name: "Hello, world", exact: true }).click();
+    await expect(page).toHaveURL("/blog/hello-world");
+    await expect(ogType).toHaveAttribute("content", "article");
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+        "content",
+        "Hello, world"
+    );
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+        "content",
+        "The first post on the Nefantaris demo blog."
+    );
+    await expect(page.locator("[data-nefantaris-head]")).toHaveCount(7);
+});

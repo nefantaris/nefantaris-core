@@ -10,7 +10,7 @@ the parsed content repo); the checked-in copies of both are minimal
 placeholders that keep the template a valid standalone app.
 
 - `src/nefantaris/` — contract types, the markdown-tree renderer, head handling
-- `src/entry-server.tsx` — prerender entry (`render(path)`)
+- `src/entry-server.tsx` — prerender entry (`render(path)` and `sitemapXml`)
 - `src/main.tsx` — hydrates prerendered HTML, falls back to client render
 
 ## Commands

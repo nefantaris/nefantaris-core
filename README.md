@@ -54,6 +54,43 @@ becomes the site icon. Two entries are build errors: `public/assets`, because
 `assets/`, `public/` is copied when core starts, so `nef dev` needs a restart
 after adding files there.
 
+## Site url, head tags, and sitemap
+
+Two optional keys in `nefantaris.json` describe the published site:
+
+```json
+{
+    "url": "https://example.com",
+    "image": "/og.png"
+}
+```
+
+`url` is the address the site is served from: an absolute `http` or `https`
+URL with no path, query, or fragment. Core stores its origin form, so
+`https://Example.com/` becomes `https://example.com`. It comes from this key
+and nowhere else; core reads no environment variable for it. `image` is the
+default share image, a path such as `/og.png` (a file in `public/`) or
+`/assets/cover.webp`, or an absolute URL. A page or post overrides it with an
+`image` key in its frontmatter.
+
+Every page gets a title, its description, `og:title`, `og:site_name`,
+`og:type` (`article` when the page has a `date`, otherwise `website`),
+`og:description` and `twitter:description` when it has a description, and
+`twitter:card`. Everything absolute needs `url`: with it, a page also gets
+`<link rel="canonical">`, `og:url`, and, when a page or site image is set,
+`og:image`, `twitter:image`, and `twitter:card` `summary_large_image` instead
+of `summary`. Canonical urls end in a slash (`https://example.com/about/`),
+the address a static host serves `about/index.html` from without a redirect.
+Without `url` none of those are emitted, never as relative urls. `404.html`
+gets `robots` `noindex` and no canonical.
+
+With `url`, `nef build` also writes `sitemap.xml` to `dist/`: every published
+page and post sorted by path, with `lastmod` taken from a `date` in
+frontmatter and never from file times. Without `url` there is no sitemap.
+Core always generates a `robots.txt` that allows everything, plus a
+`Sitemap:` line when `url` is set. A `robots.txt` or `sitemap.xml` in the
+site's `public/` replaces the generated one.
+
 ## Themes from git
 
 `theme.source` is either a path relative to the site or a git URL. A git
@@ -130,14 +167,15 @@ produces, with no Nefantaris dependency.
 | Path                  | What lives there                                                                                                                                                                                             |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/cli`             | Entry points for `build`, `dev`, `eject`, `init`, `inspect`, `theme dev`, `theme check`, `plugins add`                                                                                                       |
-| `src/config.ts`       | `nefantaris.json` — name, theme reference, `nav`, enabled plugins                                                                                                                                            |
+| `src/config.ts`       | `nefantaris.json` — name, theme reference, `nav`, enabled plugins, site `url` and `image`                                                                                                                    |
+| `src/siteUrl.ts`      | Validating and normalising the site `url`, and the image-reference rule config and frontmatter share                                                                                                         |
 | `src/manifest.ts`     | Shared reading and field validation for `theme.json` and `plugin.json`                                                                                                                                       |
 | `src/content`         | Markdown + frontmatter parsing, directives, template names from the manifest                                                                                                                                 |
 | `src/sources`         | The git snapshot resolver themes and plugins share — source syntax, the tag-or-SHA version rules, and the shallow per-site cache                                                                             |
 | `src/themes`          | The git-pinned theme resolver and its per-site cache, manifest loading, the theme copy and child-theme overlay, the generated wiring module, contract types, and the fixture corpus a theme previews against |
 | `src/plugins`         | Resolving the enabled set, enforcing a theme's `requires`, installing plugin dependencies into `.nefantaris/plugin-store/` inside the site, and emitting Vite aliases and tsconfig paths                     |
 | `src/instantiate`     | Injecting routes, content, nav, theme, and plugins into the site template, and the eject variant that unwinds plugin aliases into real dependencies                                                          |
-| `site-template/`      | The Vite/React/Wouter/Tailwind project every site is generated from; its `scripts/build.mjs` runs the client and SSR builds and prerenders every route                                                       |
+| `site-template/`      | The Vite/React/Wouter/Tailwind project every site is generated from; its `scripts/build.mjs` runs the client and SSR builds, prerenders every route, and writes `sitemap.xml` when the site has a `url`      |
 | `fixtures/demo-site`  | The fixture corpus — a content-only site covering every markdown construct, template, and directive                                                                                                          |
 | `fixtures/test-theme` | A minimal theme in the manifest shape, the one `demo-site` builds against                                                                                                                                    |
 | `e2e/`                | Playwright specs and the static server they share with Lighthouse                                                                                                                                            |

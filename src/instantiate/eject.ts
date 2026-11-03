@@ -17,6 +17,7 @@ import {
     writeGeneratedPlugins,
     writeHtmlModeAttributes,
 } from "./index.js";
+import { writeRobotsTxt } from "./robotsTxt.js";
 import { copySitePublic, writeSiteFavicon } from "./sitePublic.js";
 
 type EjectSiteOptions = {
@@ -82,7 +83,8 @@ Built with React, TypeScript, Vite, Wouter, and Tailwind CSS.
 - \`src/nefantaris/\` — contract types, the markdown-tree renderer, head
   handling
 - \`scripts/build.mjs\` — the Vite client and SSR builds, then one
-  prerendered HTML file per route
+  prerendered HTML file per route and, when the site has a url,
+  \`sitemap.xml\`
 
 ## Commands
 
@@ -114,6 +116,7 @@ export const ejectSite = async ({
     await installTheme({ siteDir, nefantarisDir: outDir, manifest });
     await writeGeneratedContent(outDir, config, content, modes);
     await writeGeneratedPlugins(outDir, noGeneratedPlugins);
+    await writeRobotsTxt(outDir, config.url);
     await copySitePublic(siteDir, outDir);
     await writeSiteFavicon(siteDir, outDir);
     await copyAssets(siteDir, outDir);

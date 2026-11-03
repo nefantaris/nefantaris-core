@@ -14,6 +14,7 @@ const contentTypes: Record<string, string> = {
     ".txt": "text/plain; charset=utf-8",
     ".webp": "image/webp",
     ".woff2": "font/woff2",
+    ".xml": "application/xml; charset=utf-8",
 };
 
 const notFoundPage = join(fixtureDistDir, "404.html");

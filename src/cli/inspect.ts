@@ -8,6 +8,8 @@ export type SiteInspection = {
     contract: number;
     site: {
         name: string;
+        url?: string;
+        image?: string;
         nav: NavItem[];
         plugins: string[];
     };
@@ -25,6 +27,8 @@ export const runInspect = async (siteDirArg: string): Promise<void> => {
         contract: 1,
         site: {
             name: config.name,
+            url: config.url,
+            image: config.image,
             nav: config.nav,
             plugins,
         },
