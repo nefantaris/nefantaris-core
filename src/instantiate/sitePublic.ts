@@ -23,7 +23,7 @@ const iconLinkPattern = /<link rel="icon"[^>]*>/;
 
 const sitePublicDir = (siteDir: string): string => join(siteDir, "public");
 
-const isPublished = (source: string): boolean =>
+export const isPublished = (source: string): boolean =>
     !unpublishedEntries.has(basename(source));
 
 const iconLink = ({ fileName, type }: Favicon): string =>

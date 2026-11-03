@@ -15,7 +15,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import { parse as parseYaml } from "yaml";
+import { parse as parseYaml, YAMLError } from "yaml";
 import { NefantarisError } from "../NefantarisError.js";
 import { isRecord } from "../narrow.js";
 import type { ContentNode, ElementProps } from "./types.js";
@@ -57,6 +57,20 @@ const processor = unified()
     .use(remarkGfm)
     .use(remarkDirective);
 
+const parseFrontmatterYaml = (source: string, filePath: string): unknown => {
+    try {
+        return parseYaml(source);
+    } catch (error) {
+        if (!(error instanceof YAMLError)) {
+            throw error;
+        }
+        const [reason] = error.message.split("\n");
+        throw new NefantarisError(
+            `${filePath}: frontmatter is not valid YAML (${reason.replace(/:$/, "")})`
+        );
+    }
+};
+
 const extractFrontmatter = (
     tree: Root,
     filePath: string
@@ -65,7 +79,7 @@ const extractFrontmatter = (
     if (!first || first.type !== "yaml") {
         throw new NefantarisError(`${filePath}: missing YAML frontmatter`);
     }
-    const parsed: unknown = parseYaml(first.value);
+    const parsed = parseFrontmatterYaml(first.value, filePath);
     if (!isRecord(parsed)) {
         throw new NefantarisError(
             `${filePath}: frontmatter must be a YAML mapping`

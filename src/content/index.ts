@@ -193,6 +193,7 @@ const parsePages = async (
             template: resolvePageTemplate(meta, path, filePath, manifest),
             meta,
             body,
+            sourceFile: filePath,
         });
     }
     return routes;
@@ -228,7 +229,13 @@ const parsePosts = async (postsDir: string): Promise<SiteContent> => {
                 ? basename(filePath, ".md")
                 : trimSlashes(meta.slug);
         const path = `/blog/${slug}`;
-        routes.push({ path, template: postTemplateName, meta, body });
+        routes.push({
+            path,
+            template: postTemplateName,
+            meta,
+            body,
+            sourceFile: filePath,
+        });
         const summary: PostSummary = {
             route: path,
             title: meta.title,

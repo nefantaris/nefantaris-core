@@ -33,7 +33,10 @@ export type SiteConfig = {
     modes: ModeConfig;
     url?: string;
     image?: string;
+    lang?: string;
 };
+
+const defaultLang = "en";
 
 const modeConfigKeys = ["default", "exclude"];
 
@@ -99,6 +102,31 @@ const readImage = (value: unknown, configPath: string): string | undefined => {
     return value;
 };
 
+const canonicalLanguageTag = (value: string): string | undefined => {
+    try {
+        return Intl.getCanonicalLocales(value)[0];
+    } catch {
+        return undefined;
+    }
+};
+
+const readLang = (value: unknown, configPath: string): string | undefined => {
+    if (value === undefined) {
+        return undefined;
+    }
+    const tag =
+        typeof value === "string" ? canonicalLanguageTag(value) : undefined;
+    if (tag === undefined) {
+        throw new NefantarisError(
+            `${configPath}: "lang" must be a BCP 47 language tag such as "en", "fr", or "pt-BR"`
+        );
+    }
+    return tag;
+};
+
+export const siteLang = (config: SiteConfig): string =>
+    config.lang ?? defaultLang;
+
 const readModes = (value: unknown, configPath: string): ModeConfig => {
     if (value === undefined) {
         return { exclude: [] };
@@ -157,7 +185,9 @@ export const loadSiteConfig = async (siteDir: string): Promise<SiteConfig> => {
     };
     const url = readSiteUrl(parsed.url, configPath);
     const image = readImage(parsed.image, configPath);
+    const lang = readLang(parsed.lang, configPath);
     if (url !== undefined) config.url = url;
     if (image !== undefined) config.image = image;
+    if (lang !== undefined) config.lang = lang;
     return config;
 };

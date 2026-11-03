@@ -10,6 +10,7 @@ export type SiteInspection = {
         name: string;
         url?: string;
         image?: string;
+        lang?: string;
         nav: NavItem[];
         plugins: string[];
     };
@@ -29,6 +30,7 @@ export const runInspect = async (siteDirArg: string): Promise<void> => {
             name: config.name,
             url: config.url,
             image: config.image,
+            lang: config.lang,
             nav: config.nav,
             plugins,
         },

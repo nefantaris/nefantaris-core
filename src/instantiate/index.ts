@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
 import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { SiteConfig } from "../config.js";
+import { siteLang, type SiteConfig } from "../config.js";
 import type { SiteContent } from "../content/index.js";
-import type { SiteMeta } from "../content/types.js";
+import type { RouteEntry, SiteMeta } from "../content/types.js";
 import {
     resolveModes,
     systemModeDefault,
@@ -56,6 +56,13 @@ const siteMetaFrom = ({ name, url, image }: SiteConfig): SiteMeta => {
     return site;
 };
 
+const contractRoute = ({
+    path,
+    template,
+    meta,
+    body,
+}: RouteEntry): RouteEntry => ({ path, template, meta, body });
+
 const renderGeneratedContent = (
     config: SiteConfig,
     content: SiteContent,
@@ -74,7 +81,7 @@ const renderGeneratedContent = (
         "",
         `export const nav: NavItem[] = ${JSON.stringify(config.nav, null, 4)};`,
         "",
-        `export const routes: RouteEntry[] = ${JSON.stringify(content.routes, null, 4)};`,
+        `export const routes: RouteEntry[] = ${JSON.stringify(content.routes.map(contractRoute), null, 4)};`,
         "",
         `export const posts: PostSummary[] = ${JSON.stringify(content.posts, null, 4)};`,
         "",
@@ -98,9 +105,9 @@ export const writeGeneratedContent = async (
 
 const htmlOpenTagPattern = /<html\b[^>]*>/;
 
-const htmlOpenTag = (modes: ModeSettings): string => {
+const htmlOpenTag = (modes: ModeSettings, lang: string): string => {
     const attributes = [
-        'lang="en"',
+        `lang="${lang}"`,
         `data-modes="${modes.available.join(" ")}"`,
         `data-default-mode="${modes.default}"`,
     ];
@@ -110,20 +117,21 @@ const htmlOpenTag = (modes: ModeSettings): string => {
     return `<html ${attributes.join(" ")}>`;
 };
 
-export const writeHtmlModeAttributes = async (
+export const writeHtmlRootAttributes = async (
     nefantarisDir: string,
+    config: SiteConfig,
     modes: ModeSettings
 ): Promise<void> => {
     const indexHtmlPath = join(nefantarisDir, "index.html");
     const html = await readFile(indexHtmlPath, "utf8");
     if (!htmlOpenTagPattern.test(html)) {
         throw new NefantarisError(
-            `${indexHtmlPath} has no <html> tag to carry the mode attributes`
+            `${indexHtmlPath} has no <html> tag to carry the lang and mode attributes`
         );
     }
     await writeFile(
         indexHtmlPath,
-        html.replace(htmlOpenTagPattern, htmlOpenTag(modes))
+        html.replace(htmlOpenTagPattern, htmlOpenTag(modes, siteLang(config)))
     );
 };
 
@@ -250,7 +258,7 @@ export const instantiateSite = async ({
         : undefined;
     await mkdir(nefantarisDir, { recursive: true });
     await copyTemplate(templateDir, nefantarisDir);
-    await writeHtmlModeAttributes(nefantarisDir, modes);
+    await writeHtmlRootAttributes(nefantarisDir, config, modes);
     await ensureSiteGitignore(siteDir);
     await installTheme({ siteDir, nefantarisDir, manifest });
     await writeGeneratedContent(nefantarisDir, config, content, modes);

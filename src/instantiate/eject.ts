@@ -15,7 +15,7 @@ import {
     skippedTemplateEntries,
     writeGeneratedContent,
     writeGeneratedPlugins,
-    writeHtmlModeAttributes,
+    writeHtmlRootAttributes,
 } from "./index.js";
 import { writeRobotsTxt } from "./robotsTxt.js";
 import { copySitePublic, writeSiteFavicon } from "./sitePublic.js";
@@ -112,7 +112,7 @@ export const ejectSite = async ({
     const modes = resolveModes(config, manifest);
     await mkdir(outDir, { recursive: true });
     await copyTemplate(templateDir, outDir, ejectSkippedEntries);
-    await writeHtmlModeAttributes(outDir, modes);
+    await writeHtmlRootAttributes(outDir, config, modes);
     await installTheme({ siteDir, nefantarisDir: outDir, manifest });
     await writeGeneratedContent(outDir, config, content, modes);
     await writeGeneratedPlugins(outDir, noGeneratedPlugins);

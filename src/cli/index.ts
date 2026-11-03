@@ -4,6 +4,7 @@ import { NefantarisError } from "../NefantarisError.js";
 import { enablePlugin } from "../plugins/enable.js";
 import { runBuild } from "./build.js";
 import { runDev } from "./dev.js";
+import { runDoctor } from "./doctor.js";
 import { runEject } from "./eject.js";
 import { runInit } from "./init.js";
 import { runInspect } from "./inspect.js";
@@ -14,6 +15,7 @@ const usage = [
     "Usage:",
     "    nef build [siteDir]",
     "    nef dev [siteDir] [viteArgs...]",
+    "    nef doctor [siteDir] [--json]",
     "    nef eject [siteDir] [--out <dir>]",
     "    nef init [siteDir] [--theme <source>] [--theme-version <ref>] [--name <site name>]",
     "    nef inspect [siteDir] --json",
@@ -24,9 +26,15 @@ const usage = [
 
 type DirAndPassthroughArgs = { dirArg: string; passthroughArgs: string[] };
 
-type DirAndOptions = {
+type ArgSpec = {
+    options?: string[];
+    flags?: string[];
+};
+
+type ParsedArgs = {
     dirArg: string | undefined;
     options: Record<string, string>;
+    flags: Set<string>;
 };
 
 const fail = (message: string): never => {
@@ -42,12 +50,13 @@ const splitDirAndPassthroughArgs = (args: string[]): DirAndPassthroughArgs => {
     return { dirArg: first, passthroughArgs: rest };
 };
 
-const parseDirAndOptions = (
+const parseArgs = (
     args: string[],
-    allowedOptions: string[]
-): DirAndOptions => {
+    { options: allowedOptions = [], flags: allowedFlags = [] }: ArgSpec
+): ParsedArgs => {
     let dirArg: string | undefined;
     const options: Record<string, string> = {};
+    const flags = new Set<string>();
     for (let index = 0; index < args.length; index += 1) {
         const arg = args[index];
         if (allowedOptions.includes(arg)) {
@@ -57,21 +66,24 @@ const parseDirAndOptions = (
             }
             options[arg] = value;
             index += 1;
+        } else if (allowedFlags.includes(arg)) {
+            if (flags.has(arg)) {
+                fail(usage);
+            }
+            flags.add(arg);
         } else if (dirArg === undefined && !arg.startsWith("--")) {
             dirArg = arg;
         } else {
             fail(usage);
         }
     }
-    return { dirArg, options };
+    return { dirArg, options, flags };
 };
 
 const runInitCommand = async (args: string[]): Promise<void> => {
-    const { dirArg, options } = parseDirAndOptions(args, [
-        "--theme",
-        "--theme-version",
-        "--name",
-    ]);
+    const { dirArg, options } = parseArgs(args, {
+        options: ["--theme", "--theme-version", "--name"],
+    });
     await runInit(
         dirArg ?? ".",
         options["--theme"],
@@ -81,7 +93,7 @@ const runInitCommand = async (args: string[]): Promise<void> => {
 };
 
 const runEjectCommand = async (args: string[]): Promise<void> => {
-    const { dirArg, options } = parseDirAndOptions(args, ["--out"]);
+    const { dirArg, options } = parseArgs(args, { options: ["--out"] });
     await runEject(dirArg ?? ".", options["--out"]);
 };
 
@@ -105,16 +117,28 @@ const runPluginsCommand = async (args: string[]): Promise<void> => {
         fail(usage);
         return;
     }
-    const { dirArg, options } = parseDirAndOptions(rest, [
-        "--source",
-        "--version",
-    ]);
+    const { dirArg, options } = parseArgs(rest, {
+        options: ["--source", "--version"],
+    });
     await enablePlugin(
         resolve(process.cwd(), dirArg ?? "."),
         name,
         options["--source"],
         options["--version"]
     );
+};
+
+const runInspectCommand = async (args: string[]): Promise<void> => {
+    const { dirArg, flags } = parseArgs(args, { flags: ["--json"] });
+    if (!flags.has("--json")) {
+        fail(usage);
+    }
+    await runInspect(dirArg ?? ".");
+};
+
+const runDoctorCommand = async (args: string[]): Promise<void> => {
+    const { dirArg, flags } = parseArgs(args, { flags: ["--json"] });
+    await runDoctor(dirArg ?? ".", flags.has("--json"));
 };
 
 const [command, ...args] = process.argv.slice(2);
@@ -128,11 +152,9 @@ try {
     } else if (command === "init") {
         await runInitCommand(args);
     } else if (command === "inspect") {
-        const [siteDirArg, formatFlag] = args;
-        if (formatFlag !== "--json") {
-            fail(usage);
-        }
-        await runInspect(siteDirArg ?? ".");
+        await runInspectCommand(args);
+    } else if (command === "doctor") {
+        await runDoctorCommand(args);
     } else if (command === "theme") {
         await runThemeCommand(args);
     } else if (command === "plugins") {

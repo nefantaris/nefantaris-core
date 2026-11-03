@@ -31,6 +31,7 @@ Once built, the engine is driven by `nef`:
 | `nef build [siteDir]`                                                                | Build a site directory to static HTML                                                                                                                   |
 | `nef dev [siteDir]`                                                                  | Serve the site with hot reload                                                                                                                          |
 | `nef inspect [siteDir] --json`                                                       | Print the site's config, templates, and directives as JSON                                                                                              |
+| `nef doctor [siteDir] [--json]`                                                      | Check the site without building: broken links and missing images are errors, everything else is advice                                                  |
 | `nef theme dev [themeDir]`                                                           | Preview a theme against the fixture corpus                                                                                                              |
 | `nef theme check [themeDir]`                                                         | Validate, typecheck, lint, and format-check a theme                                                                                                     |
 | `nef plugins add <name> [siteDir] [--source <url\|path>] [--version <ref>]`          | Enable a plugin in the site's `nefantaris.json`, pinned to a tag or commit SHA when `--source` is a git URL                                             |
@@ -90,6 +91,91 @@ frontmatter and never from file times. Without `url` there is no sitemap.
 Core always generates a `robots.txt` that allows everything, plus a
 `Sitemap:` line when `url` is set. A `robots.txt` or `sitemap.xml` in the
 site's `public/` replaces the generated one.
+
+## Site language
+
+`lang` in `nefantaris.json` is the language the site is written in, as a
+BCP 47 tag:
+
+```json
+{
+    "lang": "fr-CA"
+}
+```
+
+It must be well formed by `Intl.getCanonicalLocales`, and core stores the
+canonical form, so `"pt-br"` becomes `"pt-BR"`; anything else stops
+`nef build`, `nef dev`, `nef eject`, and `nef inspect` at config load, naming
+the key. It becomes the `lang` on the `<html>` tag of every page, in
+`nef dev`, the build, and an ejected project. Without it the tag says
+`lang="en"`. `nef inspect --json` reports `site.lang` when it is set.
+
+## Checking a site
+
+`nef doctor [siteDir]` reads the site the way `nef build` does, without
+building it, and reports what would make it better. A finding is either an
+**error**, which makes the command exit 1, or **advice**, which does not.
+`nef build` prints the same findings as warnings after the build and never
+fails because of them, so nothing gates a deploy unless a site chooses to run
+`nef doctor` in its own CI.
+
+| Rule                        | Severity | Fires when                                                                                                          |
+| --------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `site/parse`                | error    | `nefantaris.json`, the theme, or a content file cannot be read; the report has only this finding                    |
+| `links/broken-link`         | error    | A content link or nav `href` matches no page, or an `/assets/` link matches no file                                 |
+| `images/missing-file`       | error    | A content image, a frontmatter `image`, or the site `image` matches no file in `assets/` or `public/`               |
+| `meta/no-url`               | advice   | `nefantaris.json` has no `url`                                                                                      |
+| `meta/no-og-image`          | advice   | There is no site `image` and at least one page has no `image` of its own                                            |
+| `meta/description-missing`  | advice   | A page or post has no `description`                                                                                 |
+| `meta/description-short`    | advice   | A description is under 50 characters                                                                                |
+| `meta/description-long`     | advice   | A description is over 160 characters                                                                                |
+| `images/not-webp`           | advice   | A PNG, JPEG, GIF, or BMP is in `assets/`                                                                            |
+| `images/large-file`         | advice   | An image in `assets/` is over 300 KB                                                                                |
+| `images/large-dimensions`   | advice   | A PNG, JPEG, GIF, or WebP in `assets/` is over 2400 pixels on its longest side                                      |
+| `images/unreferenced-asset` | advice   | Nothing in the content, nav, `image` keys, theme, child theme, or `public/` text files mentions a file in `assets/` |
+| `a11y/empty-alt`            | advice   | A content image has empty alt text                                                                                  |
+| `a11y/heading-skip`         | advice   | A heading is more than one level below the one before it, counting the page title as level 1                        |
+| `a11y/vague-link-text`      | advice   | A link's text is empty or says nothing about where it goes ("click here", "read more", "here")                      |
+
+Links resolve the way the built site does. A link starting with `/` outside
+`/assets/` is routed as a page, so it must match a route: a trailing slash,
+query, or fragment is ignored, and a file in `public/` does not count, because
+clicking it shows the not-found page. Relative links resolve against the
+page's own address with its trailing slash, and they and absolute links to the
+site's own `url` may also point at a file. Links to other sites are not
+checked. Images may be in `assets/` or `public/`. Generated pages count, so
+`/blog` is a route when the site has posts.
+
+`--json` prints a report the editor reads:
+
+```json
+{
+    "contract": 1,
+    "errors": 1,
+    "advice": 1,
+    "findings": [
+        {
+            "severity": "error",
+            "rule": "links/broken-link",
+            "message": "\"/abuot\" matches no page.",
+            "file": "content/pages/index.md"
+        },
+        {
+            "severity": "advice",
+            "rule": "meta/description-short",
+            "message": "The description is 31 characters; 50–160 gives search results and shared links enough to show.",
+            "file": "content/posts/hello-world.md",
+            "key": "description"
+        }
+    ]
+}
+```
+
+`file` is relative to the site, with forward slashes. `key` is the frontmatter
+key or the `nefantaris.json` path (`nav[2].href`) to fix, when there is one.
+Rule ids are stable; messages are for people and may change. Errors come
+first, then advice; within each, findings are grouped by namespace (`site`,
+`meta`, `links`, `images`, `a11y`) and then sorted by file.
 
 ## Themes from git
 
@@ -166,8 +252,9 @@ produces, with no Nefantaris dependency.
 
 | Path                  | What lives there                                                                                                                                                                                             |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/cli`             | Entry points for `build`, `dev`, `eject`, `init`, `inspect`, `theme dev`, `theme check`, `plugins add`                                                                                                       |
-| `src/config.ts`       | `nefantaris.json` — name, theme reference, `nav`, enabled plugins, site `url` and `image`                                                                                                                    |
+| `src/cli`             | Entry points for `build`, `dev`, `doctor`, `eject`, `init`, `inspect`, `theme dev`, `theme check`, `plugins add`                                                                                             |
+| `src/config.ts`       | `nefantaris.json` — name, theme reference, `nav`, enabled plugins, site `url`, `image`, and `lang`                                                                                                           |
+| `src/check`           | `nef doctor`'s rules over the parsed site, one walker over the content tree, the image header reader, and the report                                                                                         |
 | `src/siteUrl.ts`      | Validating and normalising the site `url`, and the image-reference rule config and frontmatter share                                                                                                         |
 | `src/manifest.ts`     | Shared reading and field validation for `theme.json` and `plugin.json`                                                                                                                                       |
 | `src/content`         | Markdown + frontmatter parsing, directives, template names from the manifest                                                                                                                                 |

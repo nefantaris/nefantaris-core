@@ -35,4 +35,5 @@ export type RouteEntry = {
     template: string;
     meta: PageMeta;
     body: ContentNode[];
+    sourceFile?: string;
 };
