@@ -3,12 +3,11 @@ import { renderToString } from "react-dom/server";
 import { Router } from "wouter";
 import App from "./App";
 import { routes } from "./generated/content";
-import { headForPath } from "./nefantaris/head";
+import { renderHead } from "./nefantaris/head";
 
 export type RenderResult = {
     appHtml: string;
-    title: string;
-    description?: string;
+    headHtml: string;
 };
 
 export const render = (path: string): RenderResult => {
@@ -19,8 +18,7 @@ export const render = (path: string): RenderResult => {
             </Router>
         </StrictMode>
     );
-    const head = headForPath(path);
-    return { appHtml, title: head.title, description: head.description };
+    return { appHtml, headHtml: renderHead(path) };
 };
 
 export const routePaths: string[] = routes.map((entry) => entry.path);

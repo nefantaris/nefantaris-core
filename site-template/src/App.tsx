@@ -1,12 +1,7 @@
 import { useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { modeSettings, nav, posts, routes, site } from "./generated/content";
-import {
-    applyHead,
-    headForPath,
-    normalizePath,
-    routeForPath,
-} from "./nefantaris/head";
+import { applyHead, normalizePath, routeForPath } from "./nefantaris/head";
 import { useModeState } from "./nefantaris/modes";
 import { renderContent } from "./nefantaris/renderContent";
 import {
@@ -46,7 +41,7 @@ const App = () => {
             : resolvedTemplateName(currentEntry.template);
 
     useEffect(() => {
-        applyHead(headForPath(currentPath));
+        applyHead(currentPath);
     }, [currentPath]);
 
     return (

@@ -9,21 +9,6 @@ const serverDir = join(projectDir, "dist-server");
 const serverEntryFile = "src/entry-server.tsx";
 const notFoundRenderPath = "/__nefantaris_not_found__";
 
-const escapeHtml = (value) =>
-    value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-
-const headHtml = ({ title, description }) => {
-    const titleTag = `<title>${escapeHtml(title)}</title>`;
-    if (description === undefined) {
-        return titleTag;
-    }
-    return `${titleTag}\n        <meta name="description" content="${escapeHtml(description)}" />`;
-};
-
 const outputPathForRoute = (routePath) =>
     routePath === "/"
         ? join(distDir, "index.html")
@@ -56,7 +41,7 @@ const prerender = async () => {
     const writeRendered = async (routePath, outputPath) => {
         const output = renderRoute(render, routePath);
         const html = template
-            .replace("<!--app-head-->", headHtml(output))
+            .replace("<!--app-head-->", output.headHtml)
             .replace("<!--app-html-->", output.appHtml);
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, html);
